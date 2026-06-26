@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mahasiswa — Sistem Layanan Akademik</title>
+    <link rel="stylesheet" href="{% static 'assets/css/dashboard_user.css' %}">
+</head>
+
+<body>
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 6.5C4 5.67 4.67 5 5.5 5H13V19H5.5C4.67 19 4 18.33 4 17.5V6.5Z" stroke="white"
+                        stroke-width="1.6" />
+                    <path d="M20 6.5C20 5.67 19.33 5 18.5 5H13V19H18.5C19.33 19 20 18.33 20 17.5V6.5Z" stroke="white"
+                        stroke-width="1.6" />
+                </svg>
+            </div>
+            <div class="brand-name">Sistem Layanan <span>Akademik</span></div>
+        </div>
+        <div class="topbar-right">
+            <div class="user-chip">
+                <div class="avatar">{{ user.profilmahasiswa.nama|slice:":2"|upper }}</div>
+                <div>
+                    <div class="name">{{ user.profilmahasiswa.nama }}</div>
+                    <div class="role">Mahasiswa</div>
+                </div>
+            </div>
+            <a class="logout-btn" href="{% url 'logout' %}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 21H5.5C4.67 21 4 20.33 4 19.5V4.5C4 3.67 4.67 3 5.5 3H9" stroke="currentColor"
+                        stroke-width="1.7" stroke-linecap="round" />
+                    <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                </svg>
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- WELCOME -->
+        <div class="welcome-card">
+            <div class="welcome-eyebrow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3L14.5 8.5L20.5 9.3L16 13.4L17.2 19.5L12 16.4L6.8 19.5L8 13.4L3.5 9.3L9.5 8.5L12 3Z"
+                        fill="white" />
+                </svg>
+                Selamat Datang
+            </div>
+            <div class="welcome-title">Hai, {{ user.profilmahasiswa.nama }} 👋</div>
+            <div class="welcome-sub">Profil kamu berhasil disimpan. Yuk lanjutkan dengan mengisi Kuesioner FER untuk
+                membantu kami meningkatkan kualitas layanan akademik.</div>
+            <br>
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+
+        <!-- GRID -->
+        <div class="grid">
+            <!-- QUIZ CARD -->
+            <div class="card quiz-card">
+                <div class="quiz-tag">Kuesioner Aktif</div>
+                <div class="quiz-title">Kuesioner FER</div>
+                <div class="quiz-desc">Kuesioner berisi 10 pertanyaan singkat seputar
+                    pengalaman akademik mahasiswa selama semester ini. Pastikan koneksi internet stabil sebelum memulai.
+                </div>
+
+                <div class="quiz-meta">
+                    <div class="meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path
+                                d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z"
+                                stroke="currentColor" stroke-width="1.6" />
+                            <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" />
+                        </svg>
+                        10 Pertanyaan
+                    </div>
+                    <div class="meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M9 12L11 14L15.5 9.5" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
+                        </svg>
+                        {{status_kuesioner}}
+                    </div>
+                </div>
+
+                {% if not sudah_selesai %}
+                <a href="{% url 'start_kuesioner' %}">
+                    <button class="btn btn-primary">
+                        Mulai Kuesioner
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="white" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </a>
+                {% else %}
+                <button class="btn btn-primary" disabled>
+                    Kuesioner Sudah Selesai
+                </button>
+                {% endif %}
+            </div>
+
+            <!-- PROGRESS CARD -->
+            <div class="card progress-card">
+                <div class="card-label">Status Kuesioner</div>
+                <div class="info-list">
+                    <div class="info-row">
+                        <span class="label">Email</span>
+                        <span class="value">{{ user.email }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Kuesioner</span>
+                        {% if status_kuesioner == 'Selesai' %}
+                        <span class="value" style="color:green;">
+                            Selesai
+                        </span>
+                        {% else %}
+                        <span class="value" style="color:red;">
+                            Belum Diisi
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

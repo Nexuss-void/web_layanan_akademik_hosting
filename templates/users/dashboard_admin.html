@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin — Sistem Layanan Akademik</title>
+    <link rel="stylesheet" href="{% static 'assets/css/dashboard_admin.css' %}">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 6.5C4 5.67 4.67 5 5.5 5H13V19H5.5C4.67 19 4 18.33 4 17.5V6.5Z" stroke="white"
+                            stroke-width="1.6" />
+                        <path d="M20 6.5C20 5.67 19.33 5 18.5 5H13V19H18.5C19.33 19 20 18.33 20 17.5V6.5Z"
+                            stroke="white" stroke-width="1.6" />
+                    </svg>
+                </div>
+                <div class="brand-text">Sistem Layanan<br>Akademik<span>Admin Panel</span></div>
+            </div>
+
+            <div class="nav-section-label">Menu Utama</div>
+            <nav class="nav">
+                <a class="nav-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                    Dashboard
+                </a>
+            </nav>
+
+            <div class="nav-spacer"></div>
+
+            <div class="sidebar-foot">
+                <a class="logout-link" href="{% url 'logout' %}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 21H5.5C4.67 21 4 20.33 4 19.5V4.5C4 3.67 4.67 3 5.5 3H9" stroke="currentColor"
+                            stroke-width="1.7" stroke-linecap="round" />
+                        <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+            <div class="topbar">
+                <div>
+                    <h1 class="page-title">Dashboard Admin</h1>
+                    <div class="page-sub">Selamat datang kembali, kelola data kuesioner di sini.</div>
+                </div>
+                <div class="topbar-right">
+                    <form method="GET">
+                        <div class="search-box">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.8" />
+                                <path d="M21 21L16.65 16.65" stroke="#94a3b8" stroke-width="1.8"
+                                    stroke-linecap="round" />
+                            </svg>
+                            <input type="text" name="search" placeholder="Cari mahasiswa..."
+                                value="{{ request.GET.search }}">
+                        </div>
+                    </form>
+                    <div class="user-chip">
+                        <div class="avatar">{{ session_list.0.nama|slice:":2"|upper }}</div>
+                        <div>
+                            <div class="name">{{ session_list.0.nama }}</div>
+                            <div class="role">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLE PANEL -->
+            <div class="panel">
+                <div class="panel-head">
+                    <div>
+                        <div class="panel-title">Data Hasil Kuesioner Mahasiswa</div>
+                        <div class="panel-sub">Daftar mahasiswa yang telah mengisi kuesioner</div>
+                    </div>
+                    <div class="filter-row">
+                        <form method="GET" id="filterForm">
+                            <input type="hidden" name="search" value="{{ request.GET.search }}">
+                            <select class="select-pill" name="status"
+                                onchange="document.getElementById('filterForm').submit();">
+
+                                <option value="">Semua Status</option>
+                                <option value="Selesai" {% if is_selesai %} selected {% endif %}>
+                                    Selesai
+                                </option>
+                                <option value="Belum Selesai" {% if is_belum_selesai %} selected {% endif %}>
+                                    Belum Selesai
+                                </option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>Jumlah Jawaban</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                            <th>Hapus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in session_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <div class="person-cell">
+                                    <div class="person-avatar">{{ item.nama|slice:":2"|upper }}</div>
+                                    <div>
+                                        <div class="person-name">{{ item.nama }}</div>
+                                        <div class="person-email">{{ item.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="progress-wrap">
+                                    <span>{{ item.jumlah_jawaban }}/10</span>
+                                </div>
+                            </td>
+                            <td><span class="badge done"><span class="dot"></span>{{ item.status }}</span></td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a class="action-link view" href="{% url 'detail_hasil' item.session_id %}">Lihat
+                                        Hasil</a>
+                                </div>
+                            </td>
+                            <td><a class="action-link delete" href="{% url 'hapus_hasil' item.session_id %}">Hapus</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="panel-foot">
+
+                    <span>
+                        Total Data:
+                        {{ page_obj.paginator.count }}
+                    </span>
+
+                    <div class="pagination">
+
+                        {% if page_obj.has_previous %}
+                        <a class="page-btn"
+                            href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
+                            Prev
+                        </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <span class="page-btn active">
+                            {{ num }}
+                        </span>
+                        {% else %}
+                        <a class="page-btn"
+                            href="?page={{ num }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
+                            {{ num }}
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <a class="page-btn"
+                            href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
+                            Next
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
