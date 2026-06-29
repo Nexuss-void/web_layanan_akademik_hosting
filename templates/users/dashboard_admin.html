@@ -13,7 +13,11 @@
     <div class="app">
 
         <!-- SIDEBAR -->
+        <button class="menu-toggle" id="menuToggle">
+            ☰
+        </button>
         <aside class="sidebar">
+            <div class="overlay" id="overlay"></div>
             <div class="brand">
                 <div class="brand-icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -54,6 +58,7 @@
                 </a>
             </div>
         </aside>
+
 
         <!-- MAIN -->
         <main class="main">
@@ -190,6 +195,7 @@
             </div>
         </main>
     </div>
+    <script src="{% static 'assets/js/dashboard_admin.js' %}"></script>
 </body>
 
 </html>
