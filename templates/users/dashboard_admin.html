@@ -12,11 +12,17 @@
 <body>
     <div class="app">
 
+        <!-- Overlay gelap saat sidebar terbuka di mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- SIDEBAR -->
-        <button class="menu-toggle" id="menuToggle">
-            ☰
-        </button>
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
+            <!-- Tombol close di dalam sidebar untuk mobile -->
+            <button class="sidebar-close" id="sidebarClose" aria-label="Tutup menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
             <div class="brand">
                 <div class="brand-icon">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -28,7 +34,6 @@
                 </div>
                 <div class="brand-text">Sistem Layanan<br>Akademik<span>Admin Panel</span></div>
             </div>
-            <div class="overlay" id="overlay"></div>
 
             <div class="nav-section-label">Menu Utama</div>
             <nav class="nav">
@@ -63,6 +68,12 @@
         <!-- MAIN -->
         <main class="main">
             <div class="topbar">
+                <!-- Hamburger: hanya tampil di mobile -->
+                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
                 <div>
                     <h1 class="page-title">Dashboard Admin</h1>
                     <div class="page-sub">Selamat datang kembali, kelola data kuesioner di sini.</div>

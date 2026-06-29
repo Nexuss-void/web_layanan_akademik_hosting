@@ -44,25 +44,15 @@ body {
 }
 
 /* ---------- Sidebar ---------- */
-.menu-toggle {
-    display: none;
-}
-
 .sidebar {
     background: linear-gradient(180deg, #4338ca 0%, #4f46e5 45%, #3b82f6 100%);
     color: #fff;
     padding: 24px 18px;
     display: flex;
     flex-direction: column;
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    z-index: 1000;
     height: 100vh;
-}
-
-.overlay {
-    display: none;
 }
 
 .brand {
@@ -173,7 +163,6 @@ body {
 
 /* ---------- Main ---------- */
 .main {
-    margin-left: 264px;
     padding: 28px 36px 48px;
 }
 
@@ -498,46 +487,213 @@ tbody tr:hover {
     border: none;
 }
 
-@media (max-width:980px) {
+/* ======================================
+   RESPONSIVE & HAMBURGER MENU
+   ====================================== */
 
+/* Tombol hamburger — hidden by default (desktop) */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+}
+
+.hamburger span {
+    display: block;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ink-700);
+    transition: all 0.25s ease;
+    width: 100%;
+}
+
+/* Animasi silang saat sidebar terbuka */
+.hamburger.is-open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.is-open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.hamburger.is-open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Tombol close di dalam sidebar */
+.sidebar-close {
+    display: none;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .15);
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Overlay gelap di belakang sidebar */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(2px);
+    z-index: 40;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.sidebar-overlay.is-visible {
+    opacity: 1;
+}
+
+/* ---- Breakpoint utama: <= 980px ---- */
+@media (max-width: 980px) {
     .app {
-        display: block;
+        grid-template-columns: 1fr;
     }
 
-    .menu-toggle {
+    /* Hamburger tampil */
+    .hamburger {
         display: flex;
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        z-index: 2000;
     }
 
-    .sidebar {
-        left: -240px;
-        transition: left .3s;
-    }
-
-    .sidebar.show {
-        left: 0;
-    }
-
-    .main {
-        padding: 75px 20px 30px;
-    }
-
-    .overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, .35);
-        z-index: 999;
-    }
-
-    .overlay.show {
+    /* Overlay aktif */
+    .sidebar-overlay {
         display: block;
     }
 
+    /* Sidebar masuk dari kiri sebagai drawer */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 264px;
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(.4, 0, .2, 1);
+        /* override sticky dari desktop */
+        overflow-y: auto;
+    }
+
+    .sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    /* Tampilkan tombol close di dalam sidebar */
+    .sidebar-close {
+        display: flex;
+    }
+
+    /* Brand: beri ruang kanan agar tidak bertabrakan dengan tombol close */
+    .brand {
+        padding-right: 44px;
+    }
+
+    /* Main tetap full width */
     .main {
-        margin-left: 0;
-        padding: 75px 20px 30px;
+        padding: 20px 16px 40px;
+    }
+
+    /* Topbar: susun elemen lebih rapat */
+    .topbar {
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    /* Search box: lebih kecil di mobile */
+    .search-box {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .topbar-right {
+        gap: 8px;
+        flex: 1;
+    }
+
+    /* Sembunyikan nama & role di user chip, sisakan avatar saja */
+    .user-chip .name,
+    .user-chip .role {
+        display: none;
+    }
+
+    .user-chip {
+        padding: 6px;
+    }
+}
+
+/* ---- Breakpoint kecil: <= 640px ---- */
+@media (max-width: 640px) {
+
+    /* Tabel: aktifkan horizontal scroll */
+    .panel {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 560px;
+    }
+
+    thead th,
+    tbody td {
+        padding: 11px 14px;
+        font-size: 12.5px;
+    }
+
+    /* Panel head: tumpuk vertikal */
+    .panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 16px 12px;
+    }
+
+    .filter-row {
+        width: 100%;
+    }
+
+    .select-pill {
+        width: 100%;
+    }
+
+    /* Panel foot: tumpuk vertikal */
+    .panel-foot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px;
+    }
+
+    /* Page title lebih kecil */
+    .page-title {
+        font-size: 18px;
+    }
+
+    .page-sub {
+        font-size: 12px;
+    }
+
+    /* Pagination tombol sedikit lebih besar untuk touch */
+    .page-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
     }
 }
