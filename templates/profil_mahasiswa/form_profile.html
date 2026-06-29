@@ -38,7 +38,7 @@
                         <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.7" />
                         <path d="M12 8V12M12 16H12.01" stroke="white" stroke-width="1.8" stroke-linecap="round" />
                     </svg>
-                    Profile yang telah diisi tidak dapat di edit kembali,jadi pastikan untuk mengisi dengan benar dan
+                    Profile yang telah diisi tidak dapat di edit kembali, jadi pastikan untuk mengisi dengan benar dan
                     wajib diisi
                 </div>
             </div>
@@ -61,11 +61,13 @@
                     <div class="form-grid">
                         <div class="form-group full">
                             <label>Nama Lengkap <span class="required-dot"></span></label>
-                            <input type="text" name="nama" value="{{ profil.nama|default:'' }}" required>
+                            <input type="text" name="nama" value="{{ profil.nama|default:'' }}" required
+                                inputmode="email">
                         </div>
                         <div class="form-group">
                             <label>NIM <span class="required-dot"></span></label>
-                            <input type="text" name="nim" value="{{ profil.nim|default:'' }}" pattern="[0-9]+" required>
+                            <input type="text" name="nim" value="{{ profil.nim|default:'' }}" pattern="[0-9]+" required
+                                maxlength="12" inputmode="numeric">
                             {% if error_nim %}
                             <div style="color:red;">
                                 {{ error_nim }}
@@ -76,7 +78,7 @@
                         <div class="form-group">
                             <label>Nomor HP <span class="required-dot"></span></label>
                             <input type="tel" name="nomor_hp" value="{{ profil.nomor_hp|default:'' }}" pattern="[0-9]+"
-                                required>
+                                required inputmode="tel">
                         </div>
                         <div class="form-group full">
                             <label>Alamat</label>
