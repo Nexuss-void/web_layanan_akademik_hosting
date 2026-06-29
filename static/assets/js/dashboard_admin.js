@@ -1,6 +1,10 @@
-const menuToggle = document.getElementById("menuToggle");
+const btn = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
+
+btn.addEventListener("click", () => {
+    sidebar.classList.toggle("show");
+});
 
 menuToggle.addEventListener("click", () => {
     sidebar.classList.toggle("show");

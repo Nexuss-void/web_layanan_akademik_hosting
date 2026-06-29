@@ -46,19 +46,6 @@ body {
 /* ---------- Sidebar ---------- */
 .menu-toggle {
     display: none;
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 10px;
-    background: #4338ca;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    z-index: 2000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
 }
 
 .sidebar {
@@ -186,6 +173,7 @@ body {
 
 /* ---------- Main ---------- */
 .main {
+    margin-left: 264px;
     padding: 28px 36px 48px;
 }
 
@@ -517,13 +505,16 @@ tbody tr:hover {
     }
 
     .menu-toggle {
-        display: block;
+        display: flex;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 2000;
     }
 
     .sidebar {
-        width: 240px;
         left: -240px;
-        transition: left .3s ease;
+        transition: left .3s;
     }
 
     .sidebar.show {
@@ -543,5 +534,10 @@ tbody tr:hover {
 
     .overlay.show {
         display: block;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 75px 20px 30px;
     }
 }
