@@ -57,7 +57,7 @@
                 Selamat Datang
             </div>
             <div class="welcome-title">Hai, {{ user.profilmahasiswa.nama }} 👋</div>
-            <div class="welcome-sub">Profil kamu berhasil disimpan. Yuk lanjutkan dengan mengisi Kuesioner FER untuk
+            <div class="welcome-sub">Profil kamu berhasil disimpan. Yuk lanjutkan dengan mengisi Kuesioner untuk
                 membantu kami meningkatkan kualitas layanan akademik.</div>
             <br>
             {% for message in messages %}
@@ -70,7 +70,7 @@
             <!-- QUIZ CARD -->
             <div class="card quiz-card">
                 <div class="quiz-tag">Kuesioner Aktif</div>
-                <div class="quiz-title">Kuesioner FER</div>
+                <div class="quiz-title">Kuesioner</div>
                 <div class="quiz-desc">Kuesioner berisi 10 pertanyaan singkat seputar
                     pengalaman akademik mahasiswa selama semester ini. Pastikan koneksi internet stabil sebelum memulai.
                 </div>
@@ -118,11 +118,11 @@
                 <div class="card-label">Status Kuesioner</div>
                 <div class="info-list">
                     <div class="info-row">
-                        <span class="label">Email</span>
+                        <span class="label">Email </span>
                         <span class="value">{{ user.email }}</span>
                     </div>
                     <div class="info-row">
-                        <span class="label">Kuesioner</span>
+                        <span class="label">Kuesioner </span>
                         {% if status_kuesioner == 'Selesai' %}
                         <span class="value" style="color:green;">
                             Selesai
