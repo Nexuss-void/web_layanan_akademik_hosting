@@ -5,7 +5,7 @@ class HasilKuesioner(models.Model):
     question = models.ForeignKey('question.Question', on_delete=models.CASCADE)
     emotion = models.CharField(max_length=20)
     emotion_details=models.JSONField()
-    image = models.ImageField(upload_to='Home/data gambar wajah/', null=True, blank=True)
+    image = models.ImageField(upload_to='data gambar wajah/', null=True, blank=True)
     session_id = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
