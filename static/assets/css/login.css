@@ -60,6 +60,13 @@ body {
     color: #2563eb;
 }
 
+.brand-subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: #258feb;
+    margin-left: 10px;
+}
+
 .welcome-text {
     margin-bottom: 30px;
 }
