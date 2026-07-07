@@ -34,59 +34,6 @@ body {
     justify-content: center;
 }
 
-.hero-section {
-    flex: 1;
-    background: linear-gradient(135deg, #a6c8ff 0%, #80d6ff 50%, #5b9eff 100%);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-content {
-    text-align: center;
-    color: white;
-    z-index: 2;
-}
-
-.laptop-mockup {
-    width: 300px;
-    height: 200px;
-    background: #2d3748;
-    border-radius: 15px;
-    position: relative;
-    margin: 0 auto 30px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-}
-
-.laptop-screen {
-    width: 85%;
-    height: 70%;
-    background: linear-gradient(45deg, #92b9f7, #6c99f3);
-    border-radius: 8px;
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.laptop-base {
-    width: 120%;
-    height: 15px;
-    background: #2d3748;
-    border-radius: 0 0 20px 20px;
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 .brand-logo {
     display: flex;
     align-items: center;
@@ -285,10 +232,6 @@ body {
     .container {
         flex-direction: column;
         max-width: 400px;
-    }
-
-    .hero-section {
-        padding: 40px 20px;
     }
 
     .login-section {
