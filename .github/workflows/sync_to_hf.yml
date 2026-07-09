@@ -14,4 +14,4 @@ jobs:
       - name: Push ke Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://Kriveerz:$HF_TOKEN@huggingface.co/spaces/Kriveerz/web-layanan-akademik main
+        run: git push --force https://Kriveerz:$HF_TOKEN@huggingface.co/spaces/Kriveerz/academic-service-response main
