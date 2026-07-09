@@ -95,7 +95,7 @@ def admin_view(request):
         jumlah_jawaban = HasilKuesioner.objects.filter(
             session_id=item['session_id']
         ).count()
-        status = ( 'Selesai' if jumlah_jawaban >= 10 else 'Belum Selesai')
+        status = ( 'Selesai' if jumlah_jawaban >= 12 else 'Belum Selesai')
 
         data_hasil.append({
             'session_id': item['session_id'],
@@ -155,7 +155,7 @@ def user_view(request):
         user=request.user
     ).count()
 
-    total_pertanyaan=10
+    total_pertanyaan=12
     if jumlah_jawaban == 0:
         status_kuesioner = 'Belum Diisi'
     else:
@@ -227,6 +227,7 @@ def capture_image(request):
             question=question,
             emotion=emotion_results['dominan_emotion'],
             emotion_details=emotion_results['emotion_details'],
+            kepuasan=emotion_results['kepuasan'],
             image=result_detect_face['save_img'],
             session_id=request.session.get('kuesioner_session_id')
         )

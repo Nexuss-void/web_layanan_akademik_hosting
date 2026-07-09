@@ -67,7 +67,7 @@
                     <tr>
                         <th style="width:44px;text-align:center">No</th>
                         <th>Pertanyaan</th>
-                        <th style="width:130px">Emosi Dominan</th>
+                        <th style="width:130px">Hasil Respon</th>
                         <th style="width:200px">Detail Emosi</th>
                         <th style="width:100px;text-align:center">Ekspresi</th>
                     </tr>
@@ -82,7 +82,7 @@
                             {{ hasil.question.question_text }}
                         </td>
                         <td>
-                            {{ hasil.emotion }}
+                            {{hasil.kepuasan}}|{{ hasil.emotion }}
                         </td>
                         <td>
                             {% for key, value in hasil.emotion_details.items %}
