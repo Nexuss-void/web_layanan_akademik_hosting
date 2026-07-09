@@ -32,9 +32,9 @@ cloudinary.config(secure=True)
 DEBUG = False
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://kriveerz-web-layanan-akademik.hf.space",
+    "https://kriveerz-academic-service-response.hf.space",
 ]
-ALLOWED_HOSTS = ['kriveerz-web-layanan-akademik.hf.space']
+ALLOWED_HOSTS = ['kriveerz-academic-service-response.hf.space']
 
 
 # Application definition
