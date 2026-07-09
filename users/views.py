@@ -158,6 +158,8 @@ def user_view(request):
     total_pertanyaan=12
     if jumlah_jawaban == 0:
         status_kuesioner = 'Belum Diisi'
+    elif jumlah_jawaban < total_pertanyaan:
+        status_kuesioner = 'Belum selesai'
     else:
         status_kuesioner = 'Selesai'
 
