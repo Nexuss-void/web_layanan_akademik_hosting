@@ -225,9 +225,8 @@ def capture_image(request):
         HasilKuesioner.objects.create(
             user=request.user,
             question=question,
-            emotion=emotion_results['dominan_emotion'],
+            emotion=f"{emotion_results['kepuasan']} | {emotion_results['dominan_emotion']}",
             emotion_details=emotion_results['emotion_details'],
-            kepuasan=emotion_results['kepuasan'],
             image=result_detect_face['save_img'],
             session_id=request.session.get('kuesioner_session_id')
         )

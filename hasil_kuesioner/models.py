@@ -3,7 +3,7 @@ from django.db import models
 class HasilKuesioner(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     question = models.ForeignKey('question.Question', on_delete=models.CASCADE)
-    emotion = models.CharField(max_length=20)
+    emotion = models.CharField(max_length=50)
     emotion_details=models.JSONField()
     image = models.ImageField(upload_to='data gambar wajah/', null=True, blank=True)
     session_id = models.CharField(max_length=100)
