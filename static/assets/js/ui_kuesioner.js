@@ -85,7 +85,7 @@ function captureImage() {
 
     captureBtn.disabled = true;
     captureBtn.innerHTML =
-        'Memproses...';
+        '<span class="spinner"></span> Memproses...';
 
     fetch(
         '/capture/',
@@ -117,9 +117,9 @@ function captureImage() {
             } else {
                 captureBtn.disabled = false;
                 captureBtn.innerHTML =
-                    'Capture Ekspresi';
+                    'Capture Gambar';
                 showToast(
-                    'eror',
+                    'erorr',
                     data.message
                 );
             }
@@ -129,9 +129,7 @@ function captureImage() {
             captureBtn.disabled = false;
             captureBtn.innerHTML =
                 'Capture Ekspresi';
-            showToast('eror', 'Terjadi Kesalahan');
+            showToast('erorr', 'Terjadi Kesalahan');
             console.error(error);
         });
 }
-captureBtn.innerHTML =
-    '<span class="spinner"></span> Memproses...';
