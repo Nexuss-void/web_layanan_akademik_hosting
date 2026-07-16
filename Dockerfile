@@ -17,4 +17,4 @@ COPY . .
 RUN python manage.py collectstatic --noinput
 
 # Hugging Face Spaces wajib menggunakan port 7860
-CMD ["gunicorn","layanan_akademik_web.wsgi:application","--bind", "0.0.0.0:7860","--workers", "1","--threads", "2"]
+CMD ["sh","-c","python manage.py migrate && gunicorn layanan_akademik_web.wsgi:application --bind 0.0.0.0:7860 --workers 1 --threads 2"]
