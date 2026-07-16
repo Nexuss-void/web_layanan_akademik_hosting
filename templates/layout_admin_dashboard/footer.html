@@ -1,0 +1,22 @@
+{% load static %}
+        </main>
+    </div>
+    <script src="{% static 'assets/js/dashboard_admin.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'assets/js/alert.js' %}"></script>
+
+    {% if messages %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+                showAlert(
+                    "{{ message.tags }}",
+                    "{{ message|escapejs }}"
+                );
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+</body>
+
+</html>

@@ -9,6 +9,7 @@ urlpatterns = [
     path('hasil-kuesioner/', include('hasil_kuesioner.urls')),
     path('profil-mahasiswa/', include('profil_mahasiswa.urls')),
     path('kuesioner/', include('question.urls')),
+    path('dashboard-admin/', include('period_question.urls')),
 ]
 
 if settings.DEBUG:

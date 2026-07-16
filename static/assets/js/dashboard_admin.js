@@ -1,8 +1,3 @@
-/* dashboard_admin.js
- * Fungsi: hamburger menu (buka/tutup sidebar) untuk tampilan mobile.
- * Letakkan file ini di: static/assets/js/dashboard_admin.js
- */
-
 (function () {
     'use strict';
 

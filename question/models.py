@@ -1,6 +1,7 @@
 from django.db import models
 
 class Question(models.Model):
+    period=models.ForeignKey('period_question.PeriodQuestion', on_delete=models.CASCADE,null=True, blank=True)
     question_text = models.TextField()
     order_number = models.IntegerField()
 

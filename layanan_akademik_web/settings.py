@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'profil_mahasiswa',
     'question',
     'hasil_kuesioner',
+    'period_question',
     'cloudinary',
     'cloudinary_storage',
     

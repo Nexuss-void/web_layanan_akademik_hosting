@@ -13,9 +13,8 @@ from .service import fer_service as fer
 from question.models import Question
 from hasil_kuesioner.models import HasilKuesioner
 from profil_mahasiswa.models import ProfilMahasiswa
+from period_question.models import PeriodQuestion
 from users.models import User
-from django.core.files.base import ContentFile
-import uuid
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
@@ -85,17 +84,22 @@ def admin_view(request):
             'session_id',
             'user__profilmahasiswa__nama',
             'user__email',
-            # 'created_at'
+            'question__period',
+            'question__period__tahun_ajaran',
+            'question__period__semester',
         ).distinct()
     )
     
     data_hasil = []
     for item in session_list:
-
         jumlah_jawaban = HasilKuesioner.objects.filter(
             session_id=item['session_id']
         ).count()
-        status = ( 'Selesai' if jumlah_jawaban >= 12 else 'Belum Selesai')
+        total_pertanyaan=Question.objects.filter(
+            period_id=item['question__period']
+            ).count()
+        
+        status = ( 'Selesai' if jumlah_jawaban >= total_pertanyaan else 'Belum Selesai')
 
         data_hasil.append({
             'session_id': item['session_id'],
@@ -103,7 +107,9 @@ def admin_view(request):
             'email': item['user__email'],
             'jumlah_jawaban': jumlah_jawaban,
             'status': status,
-            # 'created_at': item['created_at']
+            'tahun_ajaran': item['question__period__tahun_ajaran'],
+            'semester': item['question__period__semester'],
+            'period_id': item['question__period'],
         })
 
     # Search
@@ -151,25 +157,34 @@ def user_view(request):
     profil = ProfilMahasiswa.objects.filter(user=request.user).first()
     if not profil:
         return redirect('profil_mahasiswa')
-    jumlah_jawaban = HasilKuesioner.objects.filter(
-        user=request.user
-    ).count()
+    
+    periods=PeriodQuestion.objects.filter(status='Aktif').order_by('-tahun_ajaran')
+    for period in periods:
+        total_pertanyaan = Question.objects.filter(
+            period=period
+        ).count()
+    
+        jumlah_jawaban = HasilKuesioner.objects.filter(
+            user=request.user,
+            question__period=period
+        ).count()
+        if jumlah_jawaban == 0:
+            status_kuesioner = 'Belum Diisi'
+        elif jumlah_jawaban < total_pertanyaan:
+            status_kuesioner = 'Belum selesai'
+        else:
+            status_kuesioner = 'Selesai'
 
-    total_pertanyaan=12
-    if jumlah_jawaban == 0:
-        status_kuesioner = 'Belum Diisi'
-    elif jumlah_jawaban < total_pertanyaan:
-        status_kuesioner = 'Belum selesai'
-    else:
-        status_kuesioner = 'Selesai'
+        period.total_pertanyaan = total_pertanyaan
+        period.jumlah_jawaban = jumlah_jawaban
+        period.status_kuesioner = status_kuesioner
+        period.sudah_selesai = (jumlah_jawaban >= total_pertanyaan)
 
     return render(request, 'users/dashboard_user.html',
         {
             'user': request.user,
             'profil': profil,
-            'status_kuesioner': status_kuesioner,
-            'jumlah_jawaban': jumlah_jawaban,
-            'sudah_selesai': jumlah_jawaban >= total_pertanyaan
+            'periods': periods,
         }
     )
 
@@ -247,4 +262,3 @@ def capture_image(request):
             'success': False,
             'message': str(e)
         })
-

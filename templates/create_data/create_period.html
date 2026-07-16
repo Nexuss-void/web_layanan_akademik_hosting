@@ -1,0 +1,64 @@
+{% include 'layout_admin_dashboard/header.html' %}
+    <!-- MAIN -->
+    <div class="main">
+        <!-- HERO -->
+        <div class="profile-hero">
+            <div class="profile-hero-text">
+                <div class="profile-hero-name">Input Data Periode Kuesioner</div>
+                <div class="profile-hero-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.7" />
+                        <path d="M12 8V12M12 16H12.01" stroke="white" stroke-width="1.8" stroke-linecap="round" />
+                    </svg>
+                    Input data periode kuesioner dengan benar
+                </div>
+                <br>
+            </div>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-card">
+                <!-- Data Pribadi -->
+                <div class="form-section">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Semester <span class="required-dot"></span></label>
+                            <select name="semester" required>
+                                <option value="" disabled selected>— Pilih Semester —</option>
+                                <option>Ganjil</option>
+                                <option>Genap</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tahun Ajaran <span class="required-dot"></span></label>
+                            <input type="text" name="tahun_ajaran" required
+                                maxlength="20" placeholder="Contoh: 2025/2026">
+                        </div>
+                        <div class="form-group full">
+                            <label>Status <span class="required-dot"></span></label>
+                            <select name="status" required>
+                                <option value="" disabled selected>— Pilih Status —</option>
+                                <option>Aktif</option>
+                                <option>Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- FOOTER -->
+                <div class="form-footer">
+                    <button class="btn btn-primary" type="submit">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16L21 8V19C21 20.1 20.1 21 19 21Z"
+                                stroke="white" stroke-width="1.7" stroke-linejoin="round" />
+                            <path d="M17 21V13H7V21M7 3V8H15" stroke="white" stroke-width="1.7"
+                                stroke-linejoin="round" />
+                        </svg>
+                        Simpan
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% include 'layout_admin_dashboard/footer.html' %}

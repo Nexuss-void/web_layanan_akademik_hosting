@@ -67,11 +67,12 @@
 
         <!-- GRID -->
         <div class="grid">
+        {% for period in periods %}
             <!-- QUIZ CARD -->
             <div class="card quiz-card">
                 <div class="quiz-tag">Kuesioner Aktif</div>
-                <div class="quiz-title">Kuesioner</div>
-                <div class="quiz-desc">Kuesioner berisi 12 pertanyaan singkat seputar
+                <div class="quiz-title">Kuesioner Tahun Ajaran {{ period.tahun_ajaran }} ({{period.semester}})</div>
+                <div class="quiz-desc">Kuesioner berisi {{period.total_pertanyaan}} pertanyaan singkat seputar
                     pengalaman akademik mahasiswa selama semester ini. Pastikan koneksi internet stabil sebelum memulai.
                 </div>
 
@@ -84,7 +85,7 @@
                             <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6"
                                 stroke-linecap="round" />
                         </svg>
-                        12 Pertanyaan
+                        {{period.total_pertanyaan}} Pertanyaan
                     </div>
                     <div class="meta-item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -92,12 +93,12 @@
                                 stroke-linecap="round" stroke-linejoin="round" />
                             <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
                         </svg>
-                        {{status_kuesioner}}
+                        {{period.status_kuesioner}}
                     </div>
                 </div>
 
-                {% if not sudah_selesai %}
-                <a href="{% url 'start_kuesioner' %}">
+                {% if not period.sudah_selesai %}
+                <a href="{% url 'start_kuesioner' period.id %}">
                     <button class="btn btn-primary">
                         Mulai Kuesioner
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -123,11 +124,11 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Kuesioner </span>
-                        {% if status_kuesioner == 'Selesai' %}
+                        {% if period.status_kuesioner == 'Selesai' %}
                         <span class="value" style="color:green;">
                             Selesai
                         </span>
-                        {% elif status_kuesioner == 'Belum selesai' %}
+                        {% elif period.status_kuesioner == 'Belum Selesai' %}
                         <span class="value" style="color:orange;">
                             Belum Selesai
                         </span>
@@ -139,6 +140,7 @@
                     </div>
                 </div>
             </div>
+        {% endfor %}
         </div>
     </div>
 </body>
