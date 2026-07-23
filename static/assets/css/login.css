@@ -259,7 +259,7 @@ body {
     margin-bottom: 15px;
     border-radius: 5px;
     font-size: 0.95rem;
-    text-align: left;
+    text-align: center;
 }
 
 .alert-message.success {
