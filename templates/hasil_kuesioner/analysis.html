@@ -27,6 +27,7 @@
                         </label>
                         <form method="GET">
                             <select name="period" onchange="this.form.submit()" required>
+                                <option value="" disabled selected>— Pilih Periode —</option>
                                 {% for period in periods %}
                                 <option value="{{ period.id }}" {% if selected_period.id == period.id %} selected {% endif %}>
                                     {{ period.tahun_ajaran }} ({{ period.semester }})
