@@ -38,7 +38,7 @@ def create_question(request):
         period_id = PeriodQuestion.objects.get(id=request.POST.get('period_id'))
         
         Question.objects.create(
-            period_id=period_id,
+            period_id=request.POST.get('period_id'),
             question_text=request.POST.get('question_text'),
             order_number=request.POST.get('order_number'),
             category=request.POST.get('category')
