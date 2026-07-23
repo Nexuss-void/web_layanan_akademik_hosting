@@ -23,7 +23,7 @@
             </div>
 
             {% for message in messages %}
-            <div class="alert-message error">{{ message }}</div>
+            <div class="alert-message {{ message.tags }}">{{ message }}</div>
             {% endfor %}
 
             <form method="post">
