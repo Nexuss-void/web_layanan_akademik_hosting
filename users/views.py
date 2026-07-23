@@ -35,7 +35,7 @@ def login_view(request):
                     return redirect('profil_mahasiswa')
             return redirect('dashboard_user')
         else:
-            messages.error(request, 'Incorrect email or password.')
+            messages.error(request, 'Email atau kata sandi salah.')
             return redirect('login')
     return render(request, 'users/login.html')
 
@@ -46,11 +46,11 @@ def register_view(request):
         confirm_password = request.POST.get('confirm_password')
 
         if password != confirm_password:
-            messages.error(request, 'The password entered must be the same.')
+            messages.error(request, 'Kata sandi yang dimasukkan harus sama.')
             return redirect('register')
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'The email is already registered.Please use another email.')
+            messages.error(request, 'Email sudah terdaftar. Silakan gunakan email lain.')
             return redirect('register')
 
         try:
@@ -62,7 +62,7 @@ def register_view(request):
         user = User.objects.create_user(username=email, email=email, password=password)
         user_group,created = Group.objects.get_or_create(name='user')
         user.groups.add(user_group)
-        messages.success(request, 'Registration successful. Please login.')
+        messages.success(request, 'Pendaftaran berhasil. Silakan masuk.')
         return redirect('login')
 
     return render(request, 'users/register.html')
@@ -243,13 +243,13 @@ def capture_image(request):
             if result_detect_face == 'No face':
                 return JsonResponse({
                     'success': False,
-                    'message': 'Wajah tidak terdeteksi'
+                    'message': 'Wajah tidak terdeteksi,silahkan ulangi'
                 })
 
             if result_detect_face == 'Multiple faces':
                 return JsonResponse({
                     'success': False,
-                    'message': 'Wajah terdeteksi lebih dari satu'
+                    'message': 'Wajah terdeteksi lebih dari satu,silahkan ulangi'
                 })
             
         emotion_results = fer.detect_emotion(result_detect_face['fer_img'])
@@ -289,3 +289,52 @@ def capture_image(request):
             'success': False,
             'message': str(e)
         })
+
+@user_passes_test(is_admin)
+def analysis_view(request):
+    periods=PeriodQuestion.objects.filter(status="Aktif")
+    selected_period_id = request.GET.get('period')
+    if selected_period_id:
+        selected_period=get_object_or_404(
+            PeriodQuestion,
+            id=selected_period_id,
+            status='Aktif'
+            )
+    else:
+        selected_period=periods.first()
+
+    analysis={}
+    if selected_period:
+        categories=["Academic","Non-Academic","Reputation","Access","Program Issues","Understanding"]
+        for category in categories:
+            result=HasilKuesioner.objects.filter(
+                question__period=selected_period,
+                question__category=category
+            )
+            count={
+                "Sangat Puas": 0,
+                "Puas": 0,
+                "Tidak Puas": 0,
+                "Sangat Tidak Puas": 0,
+            }
+
+            for item in result:
+                satisfaction=item.emotion.split('|')[0].strip()
+                if satisfaction in count:
+                    count[satisfaction]+=1
+            total=sum(count.values())
+            if total>0:
+                percentage={key:round(value/total *100,2) for key,value in count.items()}
+            else:
+                percentage={
+                    "Sangat Puas": 0,
+                    "Puas": 0,
+                    "Tidak Puas": 0,
+                    "Sangat Tidak Puas": 0,
+                }
+            analysis[category]=percentage
+    return render(request,'hasil_kuesioner/analysis.html',{
+        "periods": periods,
+        "selected_period": selected_period,
+        "analysis": analysis
+    })

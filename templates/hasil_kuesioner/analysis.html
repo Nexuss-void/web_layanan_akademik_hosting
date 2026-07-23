@@ -1,0 +1,57 @@
+{% include 'layout_admin_dashboard/header.html' %}
+    <!-- MAINN -->
+    <div class="main">
+        <!-- HERO -->
+        <div class="profile-hero">
+            <div class="profile-hero-text">
+                <div class="profile-hero-name">
+                    Analisis HEdPERF
+                </div>
+                <div class="profile-hero-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.7"/>
+                        <path d="M12 8V12M12 16H12.01" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    Analisis tingkat kepuasan mahasiswa berdasarkan metode HEdPERF.
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="form-card">
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>
+                            Periode Kuesioner
+                        </label>
+                        <form method="GET">
+                            <select name="period" onchange="this.form.submit()" required>
+                                {% for period in periods %}
+                                <option value="{{ period.id }}" {% if selected_period.id == period.id %} selected {% endif %}>
+                                    {{ period.tahun_ajaran }} ({{ period.semester }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PIE CHART -->
+        <div class="chart-grid">
+            {% for category,data in analysis.items %}
+            <div class="chart-card">
+                <div class="chart-title">
+                    {{ category }}
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart{{ forloop.counter }}"></canvas>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {{ analysis|json_script:"analysis-data" }}
+{% include 'layout_admin_dashboard/footer.html' %}

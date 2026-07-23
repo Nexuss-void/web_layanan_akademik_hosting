@@ -26,7 +26,19 @@
                             <label>Pertanyaan <span class="required-dot"></span></label>
                             <textarea name="question_text" rows="4" cols="50" required></textarea>
                         </div>
-                        <div class="form-group full">
+                        <div class="form-group">
+                            <label>Kategori <span class="required-dot"></span></label>
+                            <select name="category" required>
+                                <option value="" disabled selected>— Pilih Kategori —</option>
+                                <option>Academic</option>
+                                <option>Non-Academic</option>
+                                <option>Reputation</option>
+                                <option>Access</option>
+                                <option>Program Issues</option>
+                                <option>Understanding</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>Periode <span class="required-dot"></span></label>
                             <select name="period_id" required>
                                 <option value="" disabled selected>— Pilih Periode —</option>
@@ -39,7 +51,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group full">
+                        <div class="form-group">
                             <label>Nomor Urutan Pertanyaan <span class="required-dot"></span></label>
                             <input type="number" name="order_number" required>
                         </div>

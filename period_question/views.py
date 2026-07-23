@@ -40,7 +40,8 @@ def create_question(request):
         Question.objects.create(
             period_id=period_id,
             question_text=request.POST.get('question_text'),
-            order_number=request.POST.get('order_number')
+            order_number=request.POST.get('order_number'),
+            category=request.POST.get('category')
         )
         messages.success(request,'Pertanyaan berhasil ditambahkan')
         return redirect('create_question')
