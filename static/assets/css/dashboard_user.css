@@ -222,6 +222,113 @@ body {
     margin-top: 1px;
 }
 
+/* ---------- Selection period ---------- */
+.period-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: #ffffff;
+    border: 1px solid #e7eaf3;
+    border-radius: 16px;
+    padding: 16px 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(30, 41, 59, .06);
+    flex-wrap: wrap;
+}
+
+.period-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.period-bar-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: #eef2ff;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.period-bar-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.period-bar-sub {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.period-select-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #f5f3ff;
+    border: 1.5px solid #c7d2fe;
+    border-radius: 11px;
+    padding: 0 14px;
+    height: 42px;
+    transition: border-color .15s, box-shadow .15s;
+    cursor: pointer;
+}
+
+.period-select-wrap:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .12);
+    background: #fff;
+}
+
+.period-select-cal {
+    flex-shrink: 0;
+    margin-right: 10px;
+    pointer-events: none;
+}
+
+.period-chevron {
+    flex-shrink: 0;
+    margin-left: 10px;
+    pointer-events: none;
+    transition: transform .2s ease;
+}
+
+.period-select-wrap:focus-within .period-chevron {
+    transform: rotate(180deg);
+}
+
+.period-select {
+    appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #4338ca;
+    cursor: pointer;
+    padding: 0;
+    /* lebar cukup untuk teks terpanjang */
+    min-width: 160px;
+}
+
+.period-select option {
+    font-weight: 600;
+    color: #1e293b;
+    background: #fff;
+}
+
+
+
 /* ---------- Grid cards ---------- */
 .grid {
     display: grid;
@@ -343,4 +450,21 @@ body {
 .info-row .value {
     font-weight: 700;
     color: var(--ink-900);
+}
+
+@media (max-width: 640px) {
+    .period-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 14px 16px;
+    }
+
+    .period-select-wrap {
+        width: 100%;
+    }
+
+    .period-select {
+        width: 100%;
+    }
 }

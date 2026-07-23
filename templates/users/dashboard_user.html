@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Mahasiswa — Academic Service Response</title>
     <link rel="stylesheet" href="{% static 'assets/css/dashboard_user.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/footer.css' %}">
 </head>
 
 <body>
@@ -65,14 +66,55 @@
             {% endfor %}
         </div>
 
+        <!-- PERIOD BAR — REDESIGNED -->
+        <div class="period-bar">
+            <div class="period-bar-left">
+                <div class="period-bar-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+                        <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.7"/>
+                        <path d="M3 9H21" stroke="currentColor" stroke-width="1.7"/>
+                        <path d="M8 2V5M16 2V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="period-bar-title">Periode Kuesioner</div>
+                    <div class="period-bar-sub">Pilih semester yang ingin kamu isi</div>
+                </div>
+            </div>
+            <form method="GET" id="periodForm">
+                <div class="period-select-wrap">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="period-select-cal">
+                        <rect x="3" y="4" width="18" height="18" rx="3" stroke="#6366f1" stroke-width="1.8"/>
+                        <path d="M3 9H21" stroke="#6366f1" stroke-width="1.8"/>
+                        <path d="M8 2V5M16 2V5" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    <select
+                        id="periodSelect"
+                        name="period"
+                        onchange="document.getElementById('periodForm').submit();"
+                        class="period-select">
+                        {% for period in periods %}
+                        <option
+                            value="{{ period.id }}"
+                            {% if period.id == selected_period.id %}selected{% endif %}>
+                            {{ period.semester }} {{ period.tahun_ajaran }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="period-chevron">
+                        <path d="M6 9L12 15L18 9" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </form>
+        </div>
+
         <!-- GRID -->
         <div class="grid">
-        {% for period in periods %}
             <!-- QUIZ CARD -->
             <div class="card quiz-card">
                 <div class="quiz-tag">Kuesioner Aktif</div>
-                <div class="quiz-title">Kuesioner Tahun Ajaran {{ period.tahun_ajaran }} ({{period.semester}})</div>
-                <div class="quiz-desc">Kuesioner berisi {{period.total_pertanyaan}} pertanyaan singkat seputar
+                <div class="quiz-title">Kuesioner Tahun Ajaran {{ selected_period.tahun_ajaran }} ({{selected_period.semester}})</div>
+                <div class="quiz-desc">Kuesioner berisi {{selected_period.total_pertanyaan}} pertanyaan singkat seputar
                     pengalaman akademik mahasiswa selama semester ini. Pastikan koneksi internet stabil sebelum memulai.
                 </div>
 
@@ -85,7 +127,7 @@
                             <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.6"
                                 stroke-linecap="round" />
                         </svg>
-                        {{period.total_pertanyaan}} Pertanyaan
+                        {{selected_period.total_pertanyaan}} Pertanyaan
                     </div>
                     <div class="meta-item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -93,12 +135,12 @@
                                 stroke-linecap="round" stroke-linejoin="round" />
                             <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" />
                         </svg>
-                        {{period.status_kuesioner}}
+                        {{selected_period.status_kuesioner}}
                     </div>
                 </div>
 
-                {% if not period.sudah_selesai %}
-                <a href="{% url 'start_kuesioner' period.id %}">
+                {% if not selected_period.sudah_selesai %}
+                <a href="{% url 'start_kuesioner' selected_period.id %}">
                     <button class="btn btn-primary">
                         Mulai Kuesioner
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -124,11 +166,11 @@
                     </div>
                     <div class="info-row">
                         <span class="label">Kuesioner </span>
-                        {% if period.status_kuesioner == 'Selesai' %}
+                        {% if selected_period.status_kuesioner == 'Selesai' %}
                         <span class="value" style="color:green;">
                             Selesai
                         </span>
-                        {% elif period.status_kuesioner == 'Belum Selesai' %}
+                        {% elif selected_period.status_kuesioner == 'Belum Selesai' %}
                         <span class="value" style="color:orange;">
                             Belum Selesai
                         </span>
@@ -140,9 +182,9 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+
         </div>
     </div>
+    {% include 'layout_admin_dashboard/footer_dashboard.html' %}
 </body>
-
 </html>

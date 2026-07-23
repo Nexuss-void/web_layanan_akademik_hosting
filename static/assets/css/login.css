@@ -259,7 +259,13 @@ body {
     margin-bottom: 15px;
     border-radius: 5px;
     font-size: 0.95rem;
-    text-align: center;
+    text-align: left;
+}
+
+.alert-message.success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
 }
 
 .alert-message.error {

@@ -18,8 +18,8 @@
             </div>
 
             <div class="welcome-text">
-                <h1 class="welcome-title">Selamat Datang</h1>
-                <p class="welcome-subtitle">Silahkan Masuk Terlebih Dahulu</p>
+                <h1 class="welcome-title">Welcome</h1>
+                <p class="welcome-subtitle">Please log in to your account first.</p>
             </div>
 
             {% for message in messages %}
@@ -29,10 +29,10 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label class="form-label" for="email">Gmail</label>
+                    <label class="form-label" for="email">Email</label>
                     <div class="input-wrapper">
                         <span class="input-icon">👤</span>
-                        <input type="email" id="email" class="form-input" placeholder="Gmail" name="email" required>
+                        <input type="email" id="email" class="form-input" placeholder="example: user@example.com" name="email" required>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@
                 <button type="submit" class="login-button">LOGIN</button>
             </form>
             <p class="signup-text">
-                Don't have an account? <a href="{% url 'register' %}" class="signup-link">Create</a>
+                Don't have an account? <a href="{% url 'register' %}" class="signup-link">Create Here</a>
             </p>
             <div class="copyright">
                 <strong>&copy;
@@ -58,5 +58,4 @@
         </div>
     </div>
 </body>
-
 </html>

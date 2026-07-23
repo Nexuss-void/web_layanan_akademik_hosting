@@ -35,7 +35,7 @@ def login_view(request):
                     return redirect('profil_mahasiswa')
             return redirect('dashboard_user')
         else:
-            messages.error(request, 'Email atau password salah')
+            messages.error(request, 'Incorrect email or password.')
             return redirect('login')
     return render(request, 'users/login.html')
 
@@ -46,11 +46,11 @@ def register_view(request):
         confirm_password = request.POST.get('confirm_password')
 
         if password != confirm_password:
-            messages.error(request, 'The password entered must be the same')
+            messages.error(request, 'The password entered must be the same.')
             return redirect('register')
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email sudah terdaftar')
+            messages.error(request, 'The email is already registered.Please use another email.')
             return redirect('register')
 
         try:
@@ -62,7 +62,7 @@ def register_view(request):
         user = User.objects.create_user(username=email, email=email, password=password)
         user_group,created = Group.objects.get_or_create(name='user')
         user.groups.add(user_group)
-        messages.success(request, 'Registrasi berhasil. Silakan login.')
+        messages.success(request, 'Registration successful. Please login.')
         return redirect('login')
 
     return render(request, 'users/register.html')
@@ -159,32 +159,58 @@ def user_view(request):
         return redirect('profil_mahasiswa')
     
     periods=PeriodQuestion.objects.filter(status='Aktif').order_by('-tahun_ajaran')
-    for period in periods:
-        total_pertanyaan = Question.objects.filter(
-            period=period
-        ).count()
-    
-        jumlah_jawaban = HasilKuesioner.objects.filter(
-            user=request.user,
-            question__period=period
-        ).count()
-        if jumlah_jawaban == 0:
-            status_kuesioner = 'Belum Diisi'
-        elif jumlah_jawaban < total_pertanyaan:
-            status_kuesioner = 'Belum selesai'
-        else:
-            status_kuesioner = 'Selesai'
+    selected_period_id = request.GET.get('period')
 
-        period.total_pertanyaan = total_pertanyaan
-        period.jumlah_jawaban = jumlah_jawaban
-        period.status_kuesioner = status_kuesioner
-        period.sudah_selesai = (jumlah_jawaban >= total_pertanyaan)
+    if selected_period_id:
+        selected_period=get_object_or_404(
+            PeriodQuestion,
+            id=selected_period_id,
+            status='Aktif'
+            )
+    else:
+        selected_period=periods.first()
+
+    total_pertanyaan = Question.objects.filter(
+        period=selected_period
+    ).count()
+
+    sessions=HasilKuesioner.objects.filter(
+        user=request.user,
+        question__period=selected_period
+    ).values('session_id').distinct()
+
+    sudah_selesai=False
+    jumlah_jawaban=0
+    for session in sessions:
+        jumlah_jawaban=HasilKuesioner.objects.filter(
+        user=request.user,
+        question__period=selected_period,
+        session_id=session['session_id']
+    ).count()
+        if jumlah_jawaban >= total_pertanyaan:
+            sudah_selesai=True
+            break
+    if not sessions.exists():
+        status_kuesioner = 'Belum Diisi'
+    elif sudah_selesai:
+        status_kuesioner = 'Selesai'
+    else:
+        status_kuesioner = 'Belum Selesai'
+    selected_period.total_pertanyaan = total_pertanyaan
+    selected_period.jumlah_jawaban = jumlah_jawaban
+    selected_period.status_kuesioner = status_kuesioner
+    selected_period.sudah_selesai = sudah_selesai
 
     return render(request, 'users/dashboard_user.html',
         {
             'user': request.user,
             'profil': profil,
             'periods': periods,
+            "selected_period": selected_period,
+            "status_kuesioner": status_kuesioner,
+            "jumlah_jawaban": jumlah_jawaban,
+            "total_pertanyaan": total_pertanyaan,
+            "sudah_selesai": sudah_selesai,
         }
     )
 
@@ -247,13 +273,14 @@ def capture_image(request):
             image=result_detect_face['save_img'],
             session_id=request.session.get('kuesioner_session_id')
         )
-        next_question = Question.objects.filter(order_number=question.order_number + 1).first()
+        next_question = Question.objects.filter(period=question.period, order_number=question.order_number + 1).first()        
         if not next_question:
             request.session.pop('kuesioner_session_id',None)
 
         return JsonResponse({
             'success': True,
             'message': 'Hasil berhasil disimpan',
+            'period': question.period.id,
             'next_question': (next_question.order_number if next_question else None)
         })
 

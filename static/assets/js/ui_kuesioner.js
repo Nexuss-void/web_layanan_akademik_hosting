@@ -1,28 +1,15 @@
 function showToast(icon, message) {
-
     Swal.fire({
-        toast: true,
-        position: 'top-end',
-
         icon: icon,
         title: message,
-
+        position: 'center',
         showConfirmButton: false,
-
         timer: 3000,
         timerProgressBar: true,
-
-        didOpen: (toast) => {
-
-            toast.addEventListener(
-                'mouseenter',
-                Swal.stopTimer
-            );
-
-            toast.addEventListener(
-                'mouseleave',
-                Swal.resumeTimer
-            );
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
         }
     });
 }
@@ -108,6 +95,8 @@ function captureImage() {
                 if (data.next_question) {
                     window.location.href =
                         '/kuesioner/' +
+                        data.period +
+                        '/' +
                         data.next_question +
                         '/';
                 } else {
@@ -119,7 +108,7 @@ function captureImage() {
                 captureBtn.innerHTML =
                     'Capture Gambar';
                 showToast(
-                    'erorr',
+                    'error',
                     data.message
                 );
             }
@@ -128,8 +117,8 @@ function captureImage() {
         .catch(error => {
             captureBtn.disabled = false;
             captureBtn.innerHTML =
-                'Capture Ekspresi';
-            showToast('erorr', 'Terjadi Kesalahan');
+                'Capture Gambar';
+            showToast('error', 'Terjadi Kesalahan');
             console.error(error);
         });
 }
