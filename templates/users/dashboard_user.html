@@ -66,7 +66,7 @@
             {% endfor %}
         </div>
 
-        <!-- PERIOD BAR — REDESIGNED -->
+        <!-- PERIOD BAR-->
         <div class="period-bar">
             <div class="period-bar-left">
                 <div class="period-bar-icon">
@@ -88,6 +88,16 @@
                         <path d="M3 9H21" stroke="#6366f1" stroke-width="1.8"/>
                         <path d="M8 2V5M16 2V5" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"/>
                     </svg>
+                    <span class="period-select-text">
+                        {% for period in periods %}
+                            {% if period.id == selected_period.id %}
+                                {{ period.semester }} {{ period.tahun_ajaran }}
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="period-chevron">
+                        <path d="M6 9L12 15L18 9" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     <select
                         id="periodSelect"
                         name="period"
@@ -101,9 +111,6 @@
                         </option>
                         {% endfor %}
                     </select>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" class="period-chevron">
-                        <path d="M6 9L12 15L18 9" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
                 </div>
             </form>
         </div>
@@ -117,7 +124,9 @@
                 <div class="quiz-desc">Kuesioner berisi {{selected_period.total_pertanyaan}} pertanyaan singkat seputar
                     pengalaman akademik mahasiswa selama semester ini. Pastikan koneksi internet stabil sebelum memulai.
                 </div>
-
+                <p class="quiz-hint">
+                    <strong>Catatan:</strong> Hasil dari kuesioner nantinya tidak dapat diubah/dilihat kembali setelah dikirim.
+                </p>
                 <div class="quiz-meta">
                     <div class="meta-item">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
