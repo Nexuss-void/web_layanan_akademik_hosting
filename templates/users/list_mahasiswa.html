@@ -1,0 +1,145 @@
+{% load static %}
+{% include 'layout_admin_dashboard/header.html' %}
+        <!-- MAIN -->
+        <main class="main">
+            <div class="topbar">
+                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div>
+                    <h1 class="page-title">Data Mahasiswa</h1>
+                    <div class="page-sub">Daftar Hasil kuesioner Mahasiswa.</div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-chip">
+                        <div class="avatar">AD</div>
+                        <div>
+                            <div class="name">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- TABLE PANEL -->
+            <div class="content-body">
+                <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <div class="panel-title">Data Hasil Kuesioner Mahasiswa</div>
+                            <div class="panel-sub">Daftar mahasiswa yang telah mengisi kuesioner</div>
+                        </div>
+                        <div class="filter-row">
+                            <form method="GET" id="filterForm" class="filter-selection">
+                                <div class="search-box">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.8" />
+                                        <path d="M21 21L16.65 16.65" stroke="#94a3b8" stroke-width="1.8"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                    <input type="text" name="search" placeholder="Cari mahasiswa..."
+                                        value="{{ request.GET.search }}">
+                                </div>
+                                <select class="select-pill" name="status"
+                                    onchange="document.getElementById('filterForm').submit();">
+                                    <option value="">Semua Status</option>
+                                    <option value="Selesai" {% if is_selesai %} selected {% endif %}>
+                                        Selesai
+                                    </option>
+                                    <option value="Belum Selesai" {% if is_belum_selesai %} selected {% endif %}>
+                                        Belum Selesai
+                                    </option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Mahasiswa</th>
+                                <th>Periode</th>
+                                <th>Jumlah Jawaban</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                                <th>Hapus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in session_list %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div class="person-avatar">{{ item.nama|slice:":2"|upper }}</div>
+                                        <div>
+                                            <div class="person-name">{{ item.nama }}</div>
+                                            <div class="person-email">{{ item.email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.tahun_ajaran }}</div>
+                                            <div class="person-email">{{ item.semester }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="progress-wrap">
+                                        <span>{{ item.jumlah_jawaban }}/12</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge done"><span class="dot"></span>{{ item.status }}</span></td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a class="action-link view" href="{% url 'detail_hasil' item.session_id %}">Lihat
+                                            Hasil</a>
+                                    </div>
+                                </td>
+                                <td><a class="action-link delete" href="{% url 'hapus_hasil' item.session_id %}">Hapus</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="panel-foot">
+                        <span>
+                            Total Data:
+                            {{ page_obj.paginator.count }}
+                        </span>
+                        <div class="pagination">
+                            {% if page_obj.has_previous %}
+                            <a class="page-btn"
+                                href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
+                                Prev
+                            </a>
+                            {% endif %}
+                            {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <span class="page-btn active">
+                                {{ num }}
+                            </span>
+                            {% else %}
+                            <a class="page-btn"
+                                href="?page={{ num }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
+                                {{ num }}
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+                            {% if page_obj.has_next %}
+                            <a class="page-btn"
+                                href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
+                                Next
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>  
+    <script src="{% static 'assets/js/sidebar.js' %}"></script>
+</body>
+</html>

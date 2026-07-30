@@ -1,0 +1,168 @@
+{% load static %}
+{% include 'layout_admin_dashboard/header.html' %}
+        <!-- MAIN -->
+        <main class="main">
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <!-- Hamburger: hanya tampil di mobile -->
+                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div>
+                    <h1 class="page-title">Data Pertanyaan</h1>
+                    <div class="page-sub">Kelola data pertanyaan disini.</div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-chip">
+                        <div class="avatar">AD</div>
+                        <div>
+                            <div class="name">Admin</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                    <!-- TABLE PANEL -->
+            <div class="content-body">
+                <div class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <div class="panel-title">Data Pertanyaan</div>
+                            <div class="panel-sub">Daftar pertanyaan yang telah ditambahkan</div>
+                        </div>
+                        <div class="filter-row">
+                            <form method="GET" id="filterForm" class="filter-selection">
+                                <input type="hidden" name="search" value="">
+                                <select class="select-pill" name="period"
+                                    onchange="document.getElementById('filterForm').submit();">
+                                    <option value="">Semua Tahun Ajaran</option>
+                                    {% for period in periods %}
+                                        <option value="{{period.id}}"
+                                        {% if selected_period == period.id|stringformat:"s" or request.GET.period == period.id|stringformat:"s" %} selected {% endif %}>
+                                            {{period.tahun_ajaran}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <select class="select-pill" name="category"
+                                    onchange="document.getElementById('filterForm').submit();">
+                                    <option value="">Semua Kategori Pertanyaan</option>
+                                    {% for categ in categories %}
+                                        <option value="{{categ}}"
+                                        {% if selected_category == categ or request.GET.category == categ %} selected {% endif %}>
+                                            {{categ}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                            <div class="actions-cell">
+                                <a class="action-link view" href="{% url 'create_question' %}">Tambah Data</a>
+                            </div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nomor Urut Pertanyaan </th>
+                                <th>Pertanyaan</th>
+                                <th>Periode</th>
+                                <th>Kategori Pertanyaan</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in questions %}
+                            <tr>
+                                <td>{{ forloop.counter0|add:questions.start_index }}</td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.order_number }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.question_text }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.period.tahun_ajaran }}</div>
+                                            <div class="person-email">{{ item.period.semester }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.category }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <a class="action-link view" href="{% url 'edit_question' item.id %}">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="panel-foot">
+                        <span>
+                            Total Data:
+                            {{ questions.paginator.count }}
+                        </span>
+                        <div class="pagination">
+                            {% if questions.has_previous %}
+                            <a class="page-btn"
+                                href="?page={{ questions.previous_page_number }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
+                                Prev
+                            </a>
+                            {% endif %}
+                            {% for num in questions.paginator.page_range %}
+                            {% if questions.number == num %}
+                            <span class="page-btn active">
+                                {{ num }}
+                            </span>
+                            {% else %}
+                            <a class="page-btn"
+                                href="?page={{ num }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
+                                {{ num }}
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+                            {% if questions.has_next %}
+                            <a class="page-btn"
+                                href="?page={{ questions.next_page_number }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
+                                Next
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'assets/js/sidebar.js' %}"></script>
+    <script src="{% static 'assets/js/alert.js' %}"></script>
+    {% if messages %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+                showToast(
+                    "{{ message.tags }}",
+                    "{{ message|escapejs }}"
+                );
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

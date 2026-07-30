@@ -1,9 +1,7 @@
 const jurusan =
     document.getElementById("jurusan");
-
 const fakultas =
     document.getElementById("fakultas");
-
 const semester =
     document.getElementById("semester");
 
@@ -21,7 +19,7 @@ jurusan.addEventListener(
             "Teknik Informatika"
         ) {
             fakultas.value =
-                "Fakultas Sains danTeknik";
+                "Fakultas Sains dan Teknologi";
             semester.value =
                 "6";
         }

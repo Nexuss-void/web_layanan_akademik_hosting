@@ -4,7 +4,7 @@ function showToast(icon, message) {
         title: message,
         position: 'center',
         showConfirmButton: false,
-        timer: 3000,
+        timer: 1500,
         timerProgressBar: true,
         allowOutsideClick: false,
         allowEscapeKey: false,

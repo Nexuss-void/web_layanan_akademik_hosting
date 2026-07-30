@@ -1,3 +1,5 @@
+from django.db.models import Q
+from django.db.models.aggregates import Count
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group
@@ -35,7 +37,7 @@ def login_view(request):
                     return redirect('profil_mahasiswa')
             return redirect('dashboard_user')
         else:
-            messages.error(request, 'Email atau kata sandi salah.')
+            messages.error(request, 'Incorrect email or password.')
             return redirect('login')
     return render(request, 'users/login.html')
 
@@ -46,11 +48,11 @@ def register_view(request):
         confirm_password = request.POST.get('confirm_password')
 
         if password != confirm_password:
-            messages.error(request, 'Kata sandi yang dimasukkan harus sama.')
+            messages.error(request, 'The password entered must be the same.')
             return redirect('register')
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email sudah terdaftar. Silakan gunakan email lain.')
+            messages.error(request, 'The email is already registered.Please use another email.')
             return redirect('register')
 
         try:
@@ -62,7 +64,7 @@ def register_view(request):
         user = User.objects.create_user(username=email, email=email, password=password)
         user_group,created = Group.objects.get_or_create(name='user')
         user.groups.add(user_group)
-        messages.success(request, 'Pendaftaran berhasil. Silakan masuk.')
+        messages.success(request, 'Registration successful. Please login.')
         return redirect('login')
 
     return render(request, 'users/register.html')
@@ -76,78 +78,81 @@ def is_admin(user):
 
 @user_passes_test(is_admin)
 def admin_view(request):
-    search = request.GET.get('search', '')
-    status_filter = request.GET.get('status', '')
-    session_list = (
-        HasilKuesioner.objects
-        .values(
-            'session_id',
-            'user__profilmahasiswa__nama',
-            'user__email',
-            'question__period',
-            'question__period__tahun_ajaran',
-            'question__period__semester',
-        ).distinct()
-    )
-    
-    data_hasil = []
-    for item in session_list:
-        jumlah_jawaban = HasilKuesioner.objects.filter(
-            session_id=item['session_id']
-        ).count()
-        total_pertanyaan=Question.objects.filter(
-            period_id=item['question__period']
-            ).count()
-        
-        status = ( 'Selesai' if jumlah_jawaban >= total_pertanyaan else 'Belum Selesai')
+    period_active=PeriodQuestion.objects.filter(status='Aktif').order_by('-id').first()
+    total_respondents=0
+    category_labels = ['Academic', 'Non-Academic', 'Reputation', 'Access', 'Program Issues', 'Understanding']
+    ordinal_labels = ['Sangat Puas', 'Puas', 'Tidak Puas', 'Sangat Tidak Puas']
+    ordinal_data = [0, 0, 0, 0]
+    data_fast = [0, 0, 0, 0, 0, 0]
+    data_feb = [0, 0, 0, 0, 0, 0]
 
-        data_hasil.append({
-            'session_id': item['session_id'],
-            'nama': item['user__profilmahasiswa__nama'],
-            'email': item['user__email'],
-            'jumlah_jawaban': jumlah_jawaban,
-            'status': status,
-            'tahun_ajaran': item['question__period__tahun_ajaran'],
-            'semester': item['question__period__semester'],
-            'period_id': item['question__period'],
-        })
+    if period_active:
+        answers=HasilKuesioner.objects.filter(question__period=period_active)
+        # Metric Card: Total Responden
+        total_respondents=answers.values('user').distinct().count()
 
-    # Search
-    if search:
-        data_hasil = [
-            item
-            for item in data_hasil
-            if search.lower() in item['nama'].lower()
-            or search.lower() in item['email'].lower()
-        ]
+        # Group Bar Chart
+        fakultas_counts=answers.values(
+            'question__category','user__profilmahasiswa__fakultas'
+            ).annotate(
+                total=Count('id'),
+                positive=Count('id',filter=Q(emotion__icontains='Sangat Puas') | Q(emotion__icontains='Puas'))
+            )
+        dict_fast = {}
+        dict_feb = {}
 
-    # Filter Status
-    if status_filter:
-        data_hasil = [
-            item
-            for item in data_hasil
-            if item['status'] == status_filter
-        ]
-    paginator = Paginator(
-        data_hasil,
-        10
-    )
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(
-        page_number
-    )   
+        for item in fakultas_counts:
+            categ = item['question__category']
+            fakul = item['user__profilmahasiswa__fakultas']
+            total = item['total']
+            positive=item['positive']
+            rate = round((positive / total) * 100, 1) if total > 0 else 0
 
-    return render(request,'users/dashboard_admin.html', 
-        {
-        'session_list': page_obj,
-        'page_obj':page_obj,
-        'is_selesai':
-            status_filter == 'Selesai',
+            if fakul == 'Fakultas Sains dan Teknologi':
+                dict_fast[categ] = rate
+            elif fakul == 'Fakultas Ekonomi dan Bisnis':
+                dict_feb[categ] = rate
+        data_fast = [dict_fast.get(label, 0) for label in category_labels]
+        data_feb = [dict_feb.get(label, 0) for label in category_labels]
 
-        'is_belum_selesai':
-            status_filter == 'Belum Selesai',
-        }
-    )
+        # Pie Chart
+        ordinal_counter = {label: 0 for label in ordinal_labels}
+        raw_emotions=answers.values_list('emotion',flat=True)
+
+        for item in raw_emotions:
+            if not item:
+                continue
+            emo = str(item).strip().lower()
+
+            if 'sangat tidak puas' in emo:
+                ordinal_counter['Sangat Tidak Puas'] += 1
+            elif 'tidak puas' in emo:
+                ordinal_counter['Tidak Puas'] += 1
+            elif 'sangat puas' in emo:
+                ordinal_counter['Sangat Puas'] += 1
+            elif 'puas' in emo:
+                ordinal_counter['Puas'] += 1
+        ordinal_data=[ordinal_counter[label] for label in ordinal_labels]
+
+        # Metric Card: Persentase Kepuasan Positif
+        total_answers=sum(ordinal_counter.values())
+        positive_answers=ordinal_counter.get('Sangat Puas',0) + ordinal_counter.get('Puas',0)
+        if total_answers > 0:
+            positive_satisfaction_rate = f"{round((positive_answers / total_answers) * 100, 1)}%"
+        else:
+            positive_satisfaction_rate = "0%"
+
+    context={
+        'period_active':period_active,
+        'total_respondents':total_respondents,
+        'positive_satisfaction_rate':positive_satisfaction_rate,
+        'category_labels':category_labels,
+        'data_fast':data_fast,
+        'data_feb':data_feb,
+        'emotion_labels':ordinal_labels,
+        'emotion_data':ordinal_data,
+    }
+    return render(request,'users/dashboard_admin.html',context)
 
 def is_user(user):
     return user.groups.filter(name='user').exists()
@@ -243,13 +248,13 @@ def capture_image(request):
             if result_detect_face == 'No face':
                 return JsonResponse({
                     'success': False,
-                    'message': 'Wajah tidak terdeteksi,silahkan ulangi'
+                    'message': 'Wajah tidak terdeteksi'
                 })
 
             if result_detect_face == 'Multiple faces':
                 return JsonResponse({
                     'success': False,
-                    'message': 'Wajah terdeteksi lebih dari satu,silahkan ulangi'
+                    'message': 'Wajah terdeteksi lebih dari satu'
                 })
             
         emotion_results = fer.detect_emotion(result_detect_face['fer_img'])
@@ -294,6 +299,9 @@ def capture_image(request):
 def analysis_view(request):
     periods=PeriodQuestion.objects.filter(status="Aktif")
     selected_period_id = request.GET.get('period')
+    selected_fakultas = request.GET.get('fakultas', 'FAST')
+    fakultas_name = 'Fakultas Sains dan Teknologi' if selected_fakultas == 'FAST' else 'Fakultas Ekonomi dan Bisnis'
+
     if selected_period_id:
         selected_period=get_object_or_404(
             PeriodQuestion,
@@ -309,7 +317,8 @@ def analysis_view(request):
         for category in categories:
             result=HasilKuesioner.objects.filter(
                 question__period=selected_period,
-                question__category=category
+                question__category=category,
+                user__profilmahasiswa__fakultas=fakultas_name
             )
             count={
                 "Sangat Puas": 0,
@@ -336,5 +345,81 @@ def analysis_view(request):
     return render(request,'hasil_kuesioner/analysis.html',{
         "periods": periods,
         "selected_period": selected_period,
+        "selected_fakultas": selected_fakultas,
         "analysis": analysis
     })
+
+@user_passes_test(is_admin)
+def list_mahasiswa(request):
+    search = request.GET.get('search', '')
+    status_filter = request.GET.get('status', '')
+    session_list = (
+        HasilKuesioner.objects
+        .values(
+            'session_id',
+            'user__profilmahasiswa__nama',
+            'user__email',
+            'question__period',
+            'question__period__tahun_ajaran',
+            'question__period__semester',
+        ).distinct()
+    )
+    
+    data_hasil = []
+    for item in session_list:
+        jumlah_jawaban = HasilKuesioner.objects.filter(
+            session_id=item['session_id']
+        ).count()
+        total_pertanyaan=Question.objects.filter(
+            period_id=item['question__period']
+            ).count()
+        
+        status = ( 'Selesai' if jumlah_jawaban >= total_pertanyaan else 'Belum Selesai')
+
+        data_hasil.append({
+            'session_id': item['session_id'],
+            'nama': item['user__profilmahasiswa__nama'],
+            'email': item['user__email'],
+            'jumlah_jawaban': jumlah_jawaban,
+            'status': status,
+            'tahun_ajaran': item['question__period__tahun_ajaran'],
+            'semester': item['question__period__semester'],
+            'period_id': item['question__period'],
+        })
+
+    # Search
+    if search:
+        data_hasil = [
+            item
+            for item in data_hasil
+            if search.lower() in item['nama'].lower()
+            or search.lower() in item['email'].lower()
+        ]
+
+    # Filter Status
+    if status_filter:
+        data_hasil = [
+            item
+            for item in data_hasil
+            if item['status'] == status_filter
+        ]
+    paginator = Paginator(
+        data_hasil,
+        10
+    )
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(
+        page_number
+    )   
+
+    return render(request,'users/list_mahasiswa.html', 
+        {
+        'session_list': page_obj,
+        'page_obj':page_obj,
+        'is_selesai':
+            status_filter == 'Selesai',
+
+        'is_belum_selesai':
+            status_filter == 'Belum Selesai',
+        }
+    )

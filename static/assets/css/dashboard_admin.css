@@ -172,7 +172,7 @@ body {
 }
 
 .content-body {
-    padding: 24px 0;
+    padding: 1.5rem 0;
     flex: 1;
 }
 
@@ -211,9 +211,9 @@ body {
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 10px;
-    padding: 6px 14px 6px 6px;
+    padding: 2px 5px;
     box-shadow: var(--shadow-sm);
-    width: 240px;
+    width: 200px;
 }
 
 .search-box input {
@@ -353,6 +353,13 @@ body {
     flex-wrap: wrap;
 }
 
+.filter-selection {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 0;
+}
+
 .select-pill {
     border: 1px solid var(--line);
     background: #f8faff;
@@ -361,6 +368,10 @@ body {
     font-size: 13px;
     color: var(--ink-700);
     font-weight: 500;
+    width: auto;
+    min-width: 140px;
+    padding-right: 28px;
+    cursor: pointer;
 }
 
 .btn {
@@ -864,6 +875,117 @@ select {
     .user-chip {
         padding: 6px;
     }
+}
+
+/* Metric Card */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.metric-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.metric-icon.primary {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.metric-icon.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.metric-icon.success {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.metric-label {
+    font-size: 0.825rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: 2px;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-panel {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.chart-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+
+.chart-sub {
+    font-size: 0.825rem;
+    color: #64748b;
+    margin-bottom: 1.25rem;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 320px;
+    width: 100%;
+}
+
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.825rem;
+    font-weight: 600;
+}
+
+.badge-status.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-status.inactive {
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
 /* ---- Breakpoint kecil: <= 640px ---- */

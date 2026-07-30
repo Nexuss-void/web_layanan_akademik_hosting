@@ -31,4 +31,4 @@ def hapus_hasil(request, session_id):
             hasil.image.delete(save=False)
         hasil.delete()
 
-    return redirect('dashboard_admin')
+    return redirect('list_mahasiswa')

@@ -1,241 +1,109 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="id">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin — Academic Service Response</title>
-    <link rel="stylesheet" href="{% static 'assets/css/dashboard_admin.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/footer.css' %}">
-</head>
-
-<body>
-    <div class="app">
-
-        <!-- Overlay gelap saat sidebar terbuka di mobile -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-        <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
-            <!-- Tombol close di dalam sidebar untuk mobile -->
-            <button class="sidebar-close" id="sidebarClose" aria-label="Tutup menu">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                    <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </button>
-            <div class="brand">
-                <div class="brand-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M4 6.5C4 5.67 4.67 5 5.5 5H13V19H5.5C4.67 19 4 18.33 4 17.5V6.5Z" stroke="white"
-                            stroke-width="1.6" />
-                        <path d="M20 6.5C20 5.67 19.33 5 18.5 5H13V19H18.5C19.33 19 20 18.33 20 17.5V6.5Z"
-                            stroke="white" stroke-width="1.6" />
-                    </svg>
-                </div>
-                <div class="brand-text">Academic Service Response<br>(ASR)<span>Admin Panel</span></div>
-            </div>
-
-            <div class="nav-section-label">Menu Utama</div>
-            <nav class="nav">
-                <a class="nav-item" href="{% url 'dashboard_admin' %}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7" />
-                    </svg>
-                    Dashboard
-                </a>
-                <a class="nav-item" href="{% url 'create_period' %}">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 8V12L14.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" />
-                    </svg>
-                    Input Periode
-                </a>
-                <a class="nav-item" href="{% url 'create_question' %}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z"
-                            stroke="currentColor" stroke-width="1.7" />
-                        <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.7"
-                            stroke-linecap="round" />
-                    </svg>
-                    Input Pertanyaan
-                </a>
-                <a class="nav-item" href="{% url 'analysis' %}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z"
-                            stroke="currentColor" stroke-width="1.7" />
-                        <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.7"
-                            stroke-linecap="round" />
-                    </svg>
-                    Hasil Analisis
-                </a>
-            </nav>
-            <div class="nav-spacer"></div>
-            <div class="sidebar-foot">
-                <a class="logout-link" href="{% url 'logout' %}">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 21H5.5C4.67 21 4 20.33 4 19.5V4.5C4 3.67 4.67 3 5.5 3H9" stroke="currentColor"
-                            stroke-width="1.7" stroke-linecap="round" />
-                        <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                        <path d="M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
-                    </svg>
-                    Logout
-                </a>
-            </div>
-        </aside>
-
+{% include 'layout_admin_dashboard/header.html' %}
         <!-- MAIN -->
         <main class="main">
-                <div class="topbar">
-                    <!-- Hamburger: hanya tampil di mobile -->
-                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                    <div>
-                        <h1 class="page-title">Dashboard Admin</h1>
-                        <div class="page-sub">Selamat datang kembali, kelola data kuesioner di sini.</div>
-                    </div>
-                    <div class="topbar-right">
-                        <form method="GET">
-                            <div class="search-box">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                                    <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.8" />
-                                    <path d="M21 21L16.65 16.65" stroke="#94a3b8" stroke-width="1.8"
-                                        stroke-linecap="round" />
-                                </svg>
-                                <input type="text" name="search" placeholder="Cari mahasiswa..."
-                                    value="{{ request.GET.search }}">
-                            </div>
-                        </form>
-                        <div class="user-chip">
-                            <div class="avatar">AD</div>
-                            <div>
-                                <div class="name">Admin</div>
-                            </div>
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div>
+                    <h1 class="page-title">Dashboard Admin</h1>
+                    <div class="page-sub">Analisis visual kuesioner HEDPERF & pendeteksian ekspresi wajah.</div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-chip">
+                        <div class="avatar">AD</div>
+                        <div>
+                            <div class="name">Admin</div>
                         </div>
                     </div>
                 </div>
-                <!-- TABLE PANEL -->
-                <div class="main">
-                    <div class="panel">
-                        <div class="panel-head">
-                            <div>
-                                <div class="panel-title">Data Hasil Kuesioner Mahasiswa</div>
-                                <div class="panel-sub">Daftar mahasiswa yang telah mengisi kuesioner</div>
-                            </div>
-                            <div class="filter-row">
-                                <form method="GET" id="filterForm">
-                                    <input type="hidden" name="search" value="{{ request.GET.search }}">
-                                    <select class="select-pill" name="status"
-                                        onchange="document.getElementById('filterForm').submit();">
-                                        <option value="">Semua Status</option>
-                                        <option value="Selesai" {% if is_selesai %} selected {% endif %}>
-                                            Selesai
-                                        </option>
-                                        <option value="Belum Selesai" {% if is_belum_selesai %} selected {% endif %}>
-                                            Belum Selesai
-                                        </option>
-                                    </select>
-                                </form>
-                            </div>
+            </div>
+            <!-- DASHBOARD CONTENT AREA -->
+            <div class="content-body">
+                <!-- METRIC CARDS GRID -->
+                <div class="metrics-grid">
+                    <!-- Metric Card 1: Periode Aktif -->
+                    <div class="metric-card">
+                        <div class="metric-icon primary">
+                            <i class="fas fa-calendar-check"></i>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Periode</th>
-                                    <th>Jumlah Jawaban</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                    <th>Hapus</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for item in session_list %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>
-                                        <div class="person-cell">
-                                            <div class="person-avatar">{{ item.nama|slice:":2"|upper }}</div>
-                                            <div>
-                                                <div class="person-name">{{ item.nama }}</div>
-                                                <div class="person-email">{{ item.email }}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="person-cell">
-                                            <div>
-                                                <div class="person-name">{{ item.tahun_ajaran }}</div>
-                                                <div class="person-email">{{ item.semester }}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="progress-wrap">
-                                            <span>{{ item.jumlah_jawaban }}/12</span>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge done"><span class="dot"></span>{{ item.status }}</span></td>
-                                    <td>
-                                        <div class="actions-cell">
-                                            <a class="action-link view" href="{% url 'detail_hasil' item.session_id %}">Lihat
-                                                Hasil</a>
-                                        </div>
-                                    </td>
-                                    <td><a class="action-link delete" href="{% url 'hapus_hasil' item.session_id %}">Hapus</a>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                        <div class="panel-foot">
-                            <span>
-                                Total Data:
-                                {{ page_obj.paginator.count }}
-                            </span>
-                            <div class="pagination">
-                                {% if page_obj.has_previous %}
-                                <a class="page-btn"
-                                    href="?page={{ page_obj.previous_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
-                                    Prev
-                                </a>
-                                {% endif %}
-                                {% for num in page_obj.paginator.page_range %}
-                                {% if page_obj.number == num %}
-                                <span class="page-btn active">
-                                    {{ num }}
-                                </span>
+                        <div>
+                            <div class="metric-label">Periode Akademik Aktif</div>
+                            <div class="metric-value">
+                                {% if period_active %}
+                                    <span class="badge-status active">
+                                        {{ period_active.semester }} {{ period_active.tahun_ajaran }}
+                                    </span>
                                 {% else %}
-                                <a class="page-btn"
-                                    href="?page={{ num }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
-                                    {{ num }}
-                                </a>
-                                {% endif %}
-                                {% endfor %}
-                                {% if page_obj.has_next %}
-                                <a class="page-btn"
-                                    href="?page={{ page_obj.next_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}">
-                                    Next
-                                </a>
+                                    <span class="badge-status inactive">Tidak Ada Aktif</span>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
+
+                    <!-- Metric Card 2: Total Responden -->
+                    <div class="metric-card">
+                        <div class="metric-icon success">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <div class="metric-label">Total Responden</div>
+                            <div class="metric-value">{{ total_respondents }} Mahasiswa</div>
+                        </div>
+                    </div>
+
+                    <!-- Metric Card 3: Kepuasan Positif -->
+                    <div class="metric-card">
+                        <div class="metric-icon warning">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <div>
+                            <div class="metric-label">Tingkat Kepuasan Positif</div>
+                            <div class="metric-value">{{ positive_satisfaction_rate }}</div>
+                        </div>
+                    </div>
                 </div>
-            {% include 'layout_admin_dashboard/footer_dashboard.html' %}
+
+                <!-- VISUALIZATION CHARTS GRID -->
+                <div class="charts-grid">
+                    <!-- Grouped Bar Chart Panel -->
+                    <div class="chart-panel">
+                        <div class="chart-title">Perbandingan Kepuasan Positif Per Fakultas</div>
+                        <div class="chart-sub">Persentase kepuasan positif (Sangat Puas & Puas) 6 Kategori HEDPERF antara FAST dan FEB.</div>
+                        <div class="chart-wrapper">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Pie Chart Panel -->
+                    <div class="chart-panel">
+                        <div class="chart-title">Proporsi Kepuasan Mahasiswa</div>
+                        <div class="chart-sub">Agregasi hasil ekspresi wajah ke skala ordinal kepuasan.</div>
+                        <div class="chart-wrapper">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
-    </div>  
-    <script src="{% static 'assets/js/dashboard_admin.js' %}"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'assets/js/sidebar.js' %}"></script>
+    <!-- Script Pengolahan Grafik Chart.js -->
+    <script>
+        // Ambil Data Context dari Backend Django secara Aman
+        const categoryLabels = {{ category_labels|safe }};
+        const dataFast = {{ data_fast|safe }};
+        const dataFeb = {{ data_feb|safe }};
+        const emotionLabels = {{ emotion_labels|safe }};
+        const emotionData = {{ emotion_data|safe }};
+        window.pieRawData = {{ emotion_data|safe }};
+        window.pieBaseLabels = {{ emotion_labels|safe }};
+    </script>
+    <script src="{% static 'assets/js/chart_dashboard_admin.js' %}" defer></script>
 </body>
 </html>
