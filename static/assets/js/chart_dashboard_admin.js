@@ -46,7 +46,12 @@ new Chart(ctxBar, {
                         return value + "%";
                     }
                 },
-                grid: { color: '#f1f5f9' }
+                grid: {
+                    display: true,
+                    color: 'rgba(0, 0, 0, 0.15)',
+                    lineWidth: 2.3,
+                    drawBorder: false
+                }
             }
         },
         plugins: {

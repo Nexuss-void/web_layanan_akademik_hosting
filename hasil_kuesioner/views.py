@@ -22,7 +22,7 @@ def detail_hasil(request, session_id):
     )
 
 @user_passes_test(is_admin)
-def hapus_hasil(session_id):
+def hapus_hasil(request, session_id):
     hasil_list=HasilKuesioner.objects.filter(
         session_id=session_id
     )

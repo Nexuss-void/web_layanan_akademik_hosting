@@ -92,6 +92,14 @@ def admin_view(request):
         total_respondents=answers.values('user').distinct().count()
 
         # Group Bar Chart
+        total_fast_users = answers.filter(
+            user__profilmahasiswa__fakultas='Fakultas Sains dan Teknologi'
+        ).values('user').distinct().count()
+
+        total_feb_users = answers.filter(
+            user__profilmahasiswa__fakultas='Fakultas Ekonomi dan Bisnis'
+        ).values('user').distinct().count()
+
         dict_fast_positive = {categ: 0 for categ in category_labels}
         dict_fast_total = {categ: 0 for categ in category_labels}
         dict_feb_positive = {categ: 0 for categ in category_labels}
@@ -162,6 +170,8 @@ def admin_view(request):
         'category_labels':category_labels,
         'data_fast':data_fast,
         'data_feb':data_feb,
+        'total_fast_users': total_fast_users,
+        'total_feb_users': total_feb_users,
         'emotion_labels':ordinal_labels,
         'emotion_data':ordinal_data,
     }

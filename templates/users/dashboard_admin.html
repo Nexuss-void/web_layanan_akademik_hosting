@@ -11,7 +11,7 @@
                 </button>
                 <div>
                     <h1 class="page-title">Dashboard Admin</h1>
-                    <div class="page-sub">Analisis visual kuesioner HEDPERF & pendeteksian ekspresi wajah.</div>
+                    <div class="page-sub">Ringkasan visual evaluasi HEDPERF dan ekspresi wajah responden.</div>
                 </div>
                 <div class="topbar-right">
                     <div class="user-chip">
@@ -62,7 +62,7 @@
                             <i class="fas fa-smile"></i>
                         </div>
                         <div>
-                            <div class="metric-label">Tingkat Kepuasan Positif</div>
+                            <div class="metric-label">Rata-Rata Kepuasan Positif</div>
                             <div class="metric-value">{{ positive_satisfaction_rate }}</div>
                         </div>
                     </div>
@@ -72,8 +72,18 @@
                 <div class="charts-grid">
                     <!-- Grouped Bar Chart Panel -->
                     <div class="chart-panel">
-                        <div class="chart-title">Perbandingan Kepuasan Positif Per Fakultas</div>
-                        <div class="chart-sub">Persentase kepuasan positif (Sangat Puas & Puas) 6 Kategori HEDPERF antara FAST dan FEB.</div>
+                        <div class="chart-title">Perbandingan Kepuasan Antar Fakultas</div>
+                        <div class="chart-sub">Persentase respon positif (Sangat Puas & Puas) pada 6 dimensi HEDPERF.</div>
+                        <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+                            <div style="background: #f8fafc; border-left: 4px solid #0284c7; padding: 8px 16px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                <span style="font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Responden FAST</span>
+                                <strong style="font-size: 1rem; color: #0284c7;">{{ total_fast_users }} Mahasiswa</strong>
+                            </div>
+                            <div style="background: #f8fafc; border-left: 4px solid #16a34a; padding: 8px 16px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                <span style="font-size: 0.75rem; color: #64748b; display: block; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Responden FEB</span>
+                                <strong style="font-size: 1rem; color: #16a34a;">{{ total_feb_users }} Mahasiswa</strong>
+                            </div>
+                        </div>
                         <div class="chart-wrapper">
                             <canvas id="barChart"></canvas>
                         </div>
@@ -81,8 +91,8 @@
 
                     <!-- Pie Chart Panel -->
                     <div class="chart-panel">
-                        <div class="chart-title">Proporsi Kepuasan Mahasiswa</div>
-                        <div class="chart-sub">Agregasi hasil ekspresi wajah ke skala ordinal kepuasan.</div>
+                        <div class="chart-title">Distribusi Tingkat Kepuasan Responden</div>
+                        <div class="chart-sub">Pengelompokan rata-rata ekspresi wajah berdasarkan skala ordinal kepuasan.</div>
                         <div class="chart-wrapper">
                             <canvas id="pieChart"></canvas>
                         </div>
