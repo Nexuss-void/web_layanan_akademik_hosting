@@ -66,6 +66,7 @@
                 <thead>
                     <tr>
                         <th style="width:44px;text-align:center">No</th>
+                        <th style="width:150px;">Kategori Pertanyaan</th>
                         <th>Pertanyaan</th>
                         <th style="width:130px">Hasil Respon</th>
                         <th style="width:200px">Detail Emosi</th>
@@ -77,6 +78,9 @@
                     <tr>
                         <td>
                             {{ hasil.question.order_number }}
+                        </td>
+                        <td>
+                            {{ hasil.question.category }}
                         </td>
                         <td>
                             {{ hasil.question.question_text }}

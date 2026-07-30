@@ -92,28 +92,41 @@ def admin_view(request):
         total_respondents=answers.values('user').distinct().count()
 
         # Group Bar Chart
-        fakultas_counts=answers.values(
-            'question__category','user__profilmahasiswa__fakultas'
-            ).annotate(
-                total=Count('id'),
-                positive=Count('id',filter=Q(emotion__icontains='Sangat Puas') | Q(emotion__icontains='Puas'))
-            )
-        dict_fast = {}
-        dict_feb = {}
+        dict_fast_positive = {categ: 0 for categ in category_labels}
+        dict_fast_total = {categ: 0 for categ in category_labels}
+        dict_feb_positive = {categ: 0 for categ in category_labels}
+        dict_feb_total = {categ: 0 for categ in category_labels}
+        raw_answers=answers.values('question__category','user__profilmahasiswa__fakultas','emotion')
 
-        for item in fakultas_counts:
+        for item in raw_answers:
             categ = item['question__category']
             fakul = item['user__profilmahasiswa__fakultas']
-            total = item['total']
-            positive=item['positive']
-            rate = round((positive / total) * 100, 1) if total > 0 else 0
+            emo = str(item['emotion'] or '').strip().lower()
+            if not emo or categ not in category_labels:
+                continue
+
+            is_positive = False
+            if 'sangat tidak puas' in emo or 'tidak puas' in emo:
+                is_positive = False
+            elif 'sangat puas' in emo or 'puas' in emo:
+                is_positive = True
 
             if fakul == 'Fakultas Sains dan Teknologi':
-                dict_fast[categ] = rate
+                dict_fast_total[categ] += 1
+                if is_positive:
+                    dict_fast_positive[categ] += 1
             elif fakul == 'Fakultas Ekonomi dan Bisnis':
-                dict_feb[categ] = rate
-        data_fast = [dict_fast.get(label, 0) for label in category_labels]
-        data_feb = [dict_feb.get(label, 0) for label in category_labels]
+                dict_feb_total[categ] += 1
+                if is_positive:
+                    dict_feb_positive[categ] += 1
+        data_fast = [
+            round((dict_fast_positive[cat] / dict_fast_total[cat]) * 100, 1) if dict_fast_total[cat] > 0 else 0
+            for cat in category_labels
+        ]
+        data_feb = [
+            round((dict_feb_positive[cat] / dict_feb_total[cat]) * 100, 1) if dict_feb_total[cat] > 0 else 0
+            for cat in category_labels
+        ]
 
         # Pie Chart
         ordinal_counter = {label: 0 for label in ordinal_labels}
