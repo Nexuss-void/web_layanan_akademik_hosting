@@ -8,4 +8,5 @@ urlpatterns = [
     path('list-question/', views.list_questions, name='list_questions'),
     path('edit-period/<int:pk>/', views.edit_period, name='edit_period'),
     path('edit-question/<int:pk>/', views.edit_question, name='edit_question'),
+    path('manage-questions/<int:pk>/', views.manage_questions, name='manage_questions'),
 ]

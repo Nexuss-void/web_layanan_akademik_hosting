@@ -2,29 +2,29 @@
 {% include 'layout_admin_dashboard/header.html' %}
         <!-- MAIN -->
         <main class="main">
-            <!-- TOPBAR -->
-            <div class="topbar">
-                <!-- Hamburger: hanya tampil di mobile -->
-                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div>
-                    <h1 class="page-title">Data Pertanyaan</h1>
-                    <div class="page-sub">Kelola data pertanyaan disini.</div>
-                </div>
-                <div class="topbar-right">
-                    <div class="user-chip">
-                        <div class="avatar">AD</div>
-                        <div>
-                            <div class="name">Admin</div>
+                    <!-- TABLE PANEL -->
+            <div class="content-body">
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <!-- Hamburger: hanya tampil di mobile -->
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <h1 class="page-title">Data Pertanyaan</h1>
+                        <div class="page-sub">Kelola daftar data pertanyaan disini.</div>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="user-chip">
+                            <div class="avatar">AD</div>
+                            <div>
+                                <div class="name">Admin</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-                    <!-- TABLE PANEL -->
-            <div class="content-body">
                 <div class="panel">
                     <div class="panel-head">
                         <div>
@@ -64,24 +64,16 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nomor Urut Pertanyaan </th>
                                 <th>Pertanyaan</th>
                                 <th>Periode</th>
                                 <th>Kategori Pertanyaan</th>
-                                <th>Edit</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in questions %}
                             <tr>
                                 <td>{{ forloop.counter0|add:questions.start_index }}</td>
-                                <td>
-                                    <div class="person-cell">
-                                        <div>
-                                            <div class="person-name">{{ item.order_number }}</div>
-                                        </div>
-                                    </div>
-                                </td>
                                 <td>
                                     <div class="person-cell">
                                         <div>
@@ -106,7 +98,12 @@
                                 </td>
                                 <td>
                                     <div class="actions-cell">
-                                        <a class="action-link view" href="{% url 'edit_question' item.id %}">Edit</a>
+                                        <a class="action-link view" href="{% url 'edit_question' item.id %}" title="Edit Pertanyaan">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>     
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -122,7 +119,7 @@
                             {% if questions.has_previous %}
                             <a class="page-btn"
                                 href="?page={{ questions.previous_page_number }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
-                                Prev
+                                Kembali
                             </a>
                             {% endif %}
                             {% for num in questions.paginator.page_range %}
@@ -140,17 +137,15 @@
                             {% if questions.has_next %}
                             <a class="page-btn"
                                 href="?page={{ questions.next_page_number }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
-                                Next
+                                Lanjut
                             </a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>  
+    {% include 'layout_admin_dashboard/footer.html' %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'assets/js/sidebar.js' %}"></script>
     <script src="{% static 'assets/js/alert.js' %}"></script>
     {% if messages %}
     <script>

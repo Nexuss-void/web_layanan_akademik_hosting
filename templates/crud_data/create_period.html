@@ -4,6 +4,27 @@
         <main class="main">
             <!-- HERO -->
             <div class="content-body">
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <!-- Hamburger: hanya tampil di mobile -->
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <h1 class="page-title">Kelola Pertanyaan</h1>
+                        <div class="page-sub">Kelola data pertanyaan disini.</div>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="user-chip">
+                            <div class="avatar">AD</div>
+                            <div>
+                                <div class="name">Admin</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="profile-hero">
                     <div class="profile-hero-text">
                         <div class="profile-hero-name">{% if period %}Edit Data Periode Kuesioner{% else %}Input Data Periode Kuesioner{% endif %}</div>
@@ -40,7 +61,7 @@
                                 </div>
                                 <div class="form-group full">
                                     <label>Status <span class="required-dot"></span></label>
-                                    <select name="status" required>
+                                    <select name="status" class="select-category" required>
                                         <option value="" disabled {% if not period %} selected {% endif %}>— Pilih Status —</option>
                                         <option value="Aktif" {% if period and period.status == 'Aktif' %}selected{% endif %}>Aktif</option>
                                         <option value="Tidak Aktif" {% if period and period.status == 'Tidak Aktif' %}selected{% endif %}>Tidak Aktif</option>
@@ -63,8 +84,20 @@
                     </div>
                 </form>
             </div>
-        </main>
-    </div>
-    <script src="{% static 'assets/js/sidebar.js' %}"></script>
+    {% include 'layout_admin_dashboard/footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'assets/js/alert.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% if messages %}
+                {% for message in messages %}
+                    showToast(
+                        "{{ message.tags }}",
+                        "{{ message|escapejs }}"
+                    );
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
 </body>
 </html>

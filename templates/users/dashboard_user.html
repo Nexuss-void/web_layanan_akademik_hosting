@@ -148,7 +148,25 @@
                     </div>
                 </div>
 
-                {% if not selected_period.sudah_selesai %}
+                {% if selected_period.total_pertanyaan == 0 %}
+                <button class="btn btn-primary" disabled>
+                    Soal Belum Tersedia
+                </button>
+                {% elif selected_period.sudah_selesai %}
+                <button class="btn btn-primary" disabled>
+                    Kuesioner Sudah Selesai
+                </button>
+                {% elif selected_period.jumlah_jawaban > 0 %}
+                <a href="{% url 'start_kuesioner' selected_period.id %}">
+                    <button class="btn btn-primary">
+                        Lanjutkan Kuesioner (Soal Ke-{{ jumlah_jawaban|add:1 }})
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="white" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                </a>
+                {% else %}
                 <a href="{% url 'start_kuesioner' selected_period.id %}">
                     <button class="btn btn-primary">
                         Mulai Kuesioner
@@ -158,10 +176,6 @@
                         </svg>
                     </button>
                 </a>
-                {% else %}
-                <button class="btn btn-primary" disabled>
-                    Kuesioner Sudah Selesai
-                </button>
                 {% endif %}
             </div>
 
@@ -191,7 +205,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     {% include 'layout_admin_dashboard/footer_dashboard_user.html' %}

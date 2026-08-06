@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin — Academic Service Response</title>
     <link rel="stylesheet" href="{% static 'assets/css/dashboard_admin.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/footer.css' %}">
+
     <link rel="stylesheet" href="{% static 'assets/css/analysis.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -61,17 +61,17 @@
                         <path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.7" />
                         <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
                     </svg>
-                    Kelola Pertanyaan
+                    Bank Soal
                 </a>
                 <div class="nav-section-label">Hasil Analisis</div>
                 <nav class="nav">
-                    <a href="{% url 'analysis' %}?fakultas=FAST" class="nav-item" href="{% url 'list_periods' %}">
+                    <a href="{% url 'analysis_view' %}?fakultas=FAST" class="nav-item" href="{% url 'list_periods' %}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                         Analisis FAST
                     </a>
-                    <a href="{% url 'analysis' %}?fakultas=FEB" class="nav-item" href="{% url 'list_periods' %}">
+                    <a href="{% url 'analysis_view' %}?fakultas=FEB" class="nav-item" href="{% url 'list_periods' %}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>

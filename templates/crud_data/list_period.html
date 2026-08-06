@@ -2,34 +2,34 @@
 {% include 'layout_admin_dashboard/header.html' %}
         <!-- MAIN -->
         <main class="main">
-            <!-- TOPBAR -->
-            <div class="topbar">
-                <!-- Hamburger: hanya tampil di mobile -->
-                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div>
-                    <h1 class="page-title">Data Periode</h1>
-                    <div class="page-sub">Kelola data periode disini.</div>
-                </div>
-                <div class="topbar-right">
-                    <div class="user-chip">
-                        <div class="avatar">AD</div>
-                        <div>
-                            <div class="name">Admin</div>
+            <!-- TABLE PANEL -->
+            <div class="content-body">
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <!-- Hamburger: hanya tampil di mobile -->
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <h1 class="page-title">Data Periode</h1>
+                        <div class="page-sub">Kelola daftar data periode disini.</div>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="user-chip">
+                            <div class="avatar">AD</div>
+                            <div>
+                                <div class="name">Admin</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- TABLE PANEL -->
-            <div class="content-body">
                 <div class="panel">
                     <div class="panel-head">
                         <div>
                             <div class="panel-title">Data Periode</div>
-                            <div class="panel-sub">Daftar periode yang telah ditambahkan</div>
+                            <div class="panel-sub">Pilih periode pada daftar untuk memasukkan soal ke periode tersebut</div>
                         </div>
                         <div class="filter-row">
                             <form method="GET" id="filterForm" class="filter-selection">
@@ -72,12 +72,12 @@
                                 <th>Semester</th>
                                 <th>Tahun AJaran</th>
                                 <th>Status</th>
-                                <th>Edit</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in periods %}
-                            <tr>
+                            <tr class="clickable-row" data-href="{% url 'manage_questions' item.id %}" style="cursor: pointer;">
                                 <td>{{ forloop.counter0|add:periods.start_index }}</td>
                                 <td>
                                     <div class="person-cell">
@@ -100,9 +100,14 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td onclick="event.stopPropagation();">
                                     <div class="actions-cell">
-                                        <a class="action-link view" href="{% url 'edit_period' item.id %}">Edit</a>
+                                        <a class="action-link view" href="{% url 'edit_period' item.id %}" title="Edit Periode">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                            </svg>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -118,7 +123,7 @@
                             {% if periods.has_previous %}
                             <a class="page-btn"
                                 href="?page={{ periods.previous_page_number }}&search={{ request.GET.search }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
-                                Prev
+                                Kembali
                             </a>
                             {% endif %}
                             {% for num in periods.paginator.page_range %}
@@ -136,29 +141,34 @@
                             {% if periods.has_next %}
                             <a class="page-btn"
                                 href="?page={{ periods.next_page_number }}&search={{ request.GET.search }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
-                                Next
+                                Lanjut
                             </a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
-    </div>  
+    {% include 'layout_admin_dashboard/footer.html' %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{% static 'assets/js/sidebar.js' %}"></script>
     <script src="{% static 'assets/js/alert.js' %}"></script>
-    {% if messages %}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            {% for message in messages %}
-                showToast(
-                    "{{ message.tags }}",
-                    "{{ message|escapejs }}"
-                );
-            {% endfor %}
+            {% if messages %}
+                {% for message in messages %}
+                    showToast(
+                        "{{ message.tags }}",
+                        "{{ message|escapejs }}"
+                    );
+                {% endfor %}
+            {% endif %}
+
+            const rows = document.querySelectorAll(".clickable-row");
+            rows.forEach(row => {
+                row.addEventListener("click", function() {
+                    window.location.href = this.dataset.href;
+                });
+            });
         });
     </script>
-    {% endif %}
 </body>
 </html>

@@ -2,28 +2,28 @@
 {% include 'layout_admin_dashboard/header.html' %}
         <!-- MAINN -->
         <main class="main">
-            <!-- TOPBAR -->
-            <div class="topbar">
-                <!-- Hamburger: hanya tampil di mobile -->
-                <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div>
-                    <h1 class="page-title">Analisis Distribusi Metode HEDPERF</h1>
-                    <div class="page-sub">Visualisasi distribusi tingkat kepuasan mahasiswa berdasarkan 6 dimensi HEDPERF..</div>
-                </div>
-                <div class="topbar-right">
-                    <div class="user-chip">
-                        <div class="avatar">AD</div>
-                        <div>
-                            <div class="name">Admin</div>
+            <div class="content-body">
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <!-- Hamburger: hanya tampil di mobile -->
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <h1 class="page-title">Analisis Distribusi Metode HEDPERF</h1>
+                        <div class="page-sub">Visualisasi distribusi tingkat kepuasan mahasiswa berdasarkan 6 dimensi HEDPERF..</div>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="user-chip">
+                            <div class="avatar">AD</div>
+                            <div>
+                                <div class="name">Admin</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="content-body">
                 <!-- FILTER -->
                 <div class="form-card">
                     <div class="form-section">
@@ -32,25 +32,25 @@
                                 <label>
                                     Pilih Periode Akademik
                                 </label>
-                                <form method="GET">
-                                    <input type="hidden" name="fakultas" value="{{ selected_fakultas }}">
-                                    <select name="period">
-                                        <option value="" disabled selected>— Pilih Periode —</option>
-                                        {% for period in periods %}
-                                        <option value="{{ period.id }}" {% if selected_period.id == period.id %} selected {% endif %}>
-                                            {{ period.tahun_ajaran }} ({{ period.semester }})
-                                        </option>
-                                        {% endfor %}
-                                    </select>
-                                    <button class="btn btn-primary" type="submit">
-                                        Terapkan
-                                    </button>
-                                </form>
+                                <div class="filter-row">
+                                    <form method="GET" id="filterForm" class="filter-selection">
+                                        <input type="hidden" name="fakultas" value="{{ selected_fakultas }}">
+                                        <select name="period" name="fakultas" onchange="document.getElementById('filterForm').submit();">
+                                            <option value="" disabled selected>— Pilih Periode —</option>
+                                            {% for period in periods %}
+                                            <option value="{{ period.id }}" {% if selected_period.id == period.id or request.GET.status == period.id %} selected {% endif %}>
+                                                {{ period.tahun_ajaran }} ({{ period.semester }})
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- PIE CHART -->
+                {% if analysis %}
                 <div class="chart-grid">
                     {% for category,data in analysis.items %}
                     <div class="chart-card">
@@ -63,12 +63,18 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                <div class="empty-state-card">
+                    <h3 class="empty-state-title">Data Belum Tersedia</h3>
+                    <p class="empty-state-desc">
+                        Belum ada data kuesioner yang masuk untuk periode <strong>{{ selected_period.tahun_ajaran }} ({{ selected_period.semester }})</strong>.
+                    </p>
+                </div>
+                {% endif %}
             </div>
             {{ analysis|json_script:"analysis-data" }}
-        </main>
-    </div>
+    {% include "layout_admin_dashboard/footer.html" %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'assets/js/analysis.js' %}"></script>
-    <script src="{% static 'assets/js/sidebar.js' %}"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@ class PeriodQuestion(models.Model):
         choices=[('Aktif', 'Aktif'), ('Tidak Aktif', 'Tidak Aktif')], 
         default='Aktif'
         )
+    questions= models.ManyToManyField('question.Question', related_name='period_questions')
 
     def __str__(self):
         return f"{self.semester} - {self.tahun_ajaran} - {self.status}"

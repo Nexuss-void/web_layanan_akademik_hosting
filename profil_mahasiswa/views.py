@@ -87,7 +87,6 @@ def profil_mahasiswa_view(request):
             return redirect('profil_mahasiswa')
 
         if profil:
-
             profil.nama = nama
             profil.nim = nim
             profil.fakultas = fakultas
@@ -95,16 +94,12 @@ def profil_mahasiswa_view(request):
             profil.semester = semester
             profil.alamat = alamat
             profil.nomor_hp = nomor_hp
-
             profil.save()
-
             messages.success(
                 request,
                 'Profil berhasil diperbarui'
             )
-
         else:
-
             ProfilMahasiswa.objects.create(
                 user=request.user,
                 nama=nama,
@@ -115,12 +110,10 @@ def profil_mahasiswa_view(request):
                 alamat=alamat,
                 nomor_hp=nomor_hp
             )
-
             messages.success(
                 request,
                 'Profil berhasil disimpan'
             )
-
         return redirect('dashboard_user')
 
     return render(

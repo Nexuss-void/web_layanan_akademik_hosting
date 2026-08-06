@@ -1,0 +1,766 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelola Pertanyaan — Academic Service Response</title>
+<style>
+    :root{
+    --indigo-700:#4338ca;--indigo-600:#4f46e5;--blue-500:#3b82f6;
+    --ink-900:#1e293b;--ink-700:#334155;--ink-500:#64748b;--ink-400:#94a3b8;
+    --line:#e7eaf3;--card:#fff;
+    --success-bg:#ecfdf5;--success-fg:#15803d;
+    --danger:#e11d48;
+    --sh-sm:0 1px 2px rgba(30,41,59,.05);
+    --sh-md:0 8px 24px -8px rgba(67,56,202,.18);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:linear-gradient(160deg,#eef2ff 0%,#dbeafe 55%,#eef2ff 100%);
+    min-height:100vh;color:var(--ink-900);
+    }
+
+    /* ── APP LAYOUT ── */
+    .app{display:grid;grid-template-columns:264px 1fr;min-height:100vh;}
+
+    /* ── SIDEBAR ── */
+    .sidebar{
+    background:linear-gradient(180deg,#4338ca 0%,#4f46e5 45%,#3b82f6 100%);
+    color:#fff;padding:24px 18px;
+    display:flex;flex-direction:column;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    }
+    .brand{display:flex;align-items:center;gap:10px;padding:6px 8px 22px;}
+    .brand-icon{
+    width:36px;height:36px;border-radius:10px;
+    background:rgba(255,255,255,.18);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .brand-text{font-weight:700;font-size:14px;line-height:1.25;}
+    .brand-text small{
+    display:block;font-weight:500;font-size:10.5px;
+    opacity:.72;letter-spacing:.5px;text-transform:uppercase;margin-top:2px;
+    }
+    .nav-label{
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;
+    opacity:.6;margin:16px 10px 7px;font-weight:700;
+    }
+    .nav{display:flex;flex-direction:column;gap:2px;}
+    .nav-item{
+    display:flex;align-items:center;gap:11px;
+    padding:10px 12px;border-radius:10px;
+    color:rgba(255,255,255,.82);text-decoration:none;
+    font-size:13.5px;font-weight:500;cursor:pointer;
+    transition:background .15s,color .15s;
+    }
+    .nav-item:hover{background:rgba(255,255,255,.10);color:#fff;}
+    .nav-item.active{
+    background:rgba(255,255,255,.18);color:#fff;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+    }
+    .nav-item svg{flex-shrink:0;opacity:.9;}
+    .nav-spacer{flex:1;}
+    .sidebar-foot{border-top:1px solid rgba(255,255,255,.18);padding-top:14px;margin-top:10px;}
+    .logout-link{
+    display:flex;align-items:center;gap:10px;
+    color:rgba(255,255,255,.85);text-decoration:none;
+    font-size:13.5px;font-weight:600;padding:10px 12px;
+    border-radius:10px;transition:background .15s;
+    }
+    .logout-link:hover{background:rgba(255,255,255,.12);}
+
+    /* ── MAIN ── */
+    .main{padding:28px 32px 48px;min-width:0;}
+
+    /* ── TOPBAR ── */
+    .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:24px;gap:14px;flex-wrap:wrap;
+    }
+    .hamburger{
+    display:none;flex-direction:column;justify-content:center;gap:5px;
+    width:40px;height:40px;padding:8px;
+    border:1px solid var(--line);border-radius:10px;
+    background:#fff;cursor:pointer;box-shadow:var(--sh-sm);flex-shrink:0;
+    }
+    .hamburger span{display:block;height:2px;border-radius:2px;background:var(--ink-700);transition:all .25s;}
+    .hamburger.is-open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+    .hamburger.is-open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .hamburger.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+    .page-title{font-size:24px;font-weight:800;color:var(--ink-900);}
+    .page-sub{font-size:13.5px;color:var(--ink-500);margin-top:4px;}
+    .user-chip{
+    display:flex;align-items:center;gap:10px;
+    background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:6px 14px 6px 6px;box-shadow:var(--sh-sm);
+    }
+    .avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(135deg,#6366f1,#3b82f6);
+    color:#fff;font-weight:700;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+    }
+    .uc-name{font-size:13.5px;font-weight:600;color:var(--ink-900);}
+    .uc-role{font-size:11px;color:var(--ink-500);}
+
+    /* ── PERIOD BAR ── */
+    .period-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:15px 22px;margin-bottom:22px;
+    box-shadow:var(--sh-sm);flex-wrap:wrap;
+    }
+    .pb-left{display:flex;align-items:center;gap:13px;}
+    .pb-icon{
+    width:40px;height:40px;border-radius:11px;
+    background:#eef2ff;color:#4f46e5;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .pb-title{font-size:14px;font-weight:700;color:var(--ink-900);}
+    .pb-sub{font-size:12px;color:var(--ink-500);margin-top:2px;}
+    .period-select-wrap{
+    display:flex;align-items:center;
+    background:#f5f3ff;border:1.5px solid #c7d2fe;
+    border-radius:11px;padding:0 13px;height:42px;
+    transition:border-color .15s,box-shadow .15s;
+    }
+    .period-select-wrap:focus-within{
+    border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12);background:#fff;
+    }
+    .ps-cal{flex-shrink:0;margin-right:9px;pointer-events:none;}
+    .ps-chev{flex-shrink:0;margin-left:9px;pointer-events:none;transition:transform .2s;}
+    .period-select-wrap:focus-within .ps-chev{transform:rotate(180deg);}
+    .period-select{
+    appearance:none;border:none;outline:none;background:transparent;
+    font-family:inherit;font-size:13.5px;font-weight:700;color:#4338ca;
+    cursor:pointer;min-width:180px;
+    }
+
+    /* ── TRANSFER LAYOUT — vertikal ── */
+    .transfer-grid{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-bottom:20px;
+    }
+
+    /* ── PANEL CARD ── */
+    .t-panel{
+    background:#fff;border:1px solid var(--line);
+    border-radius:16px;box-shadow:var(--sh-sm);
+    display:flex;flex-direction:column;overflow:hidden;
+    }
+    .t-panel-head{
+    padding:17px 20px 14px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .tph-left{display:flex;align-items:center;gap:11px;}
+    .tph-icon{
+    width:36px;height:36px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .icon-bank{background:#eef2ff;color:#4f46e5;}
+    .icon-active{background:#ecfdf5;color:#16a34a;}
+    .tph-title{font-size:14.5px;font-weight:700;color:var(--ink-900);}
+    .tph-sub{font-size:11.5px;color:var(--ink-500);margin-top:1px;}
+    .count-chip{
+    font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px;
+    white-space:nowrap;flex-shrink:0;
+    }
+    .chip-indigo{background:#eef2ff;color:#4338ca;}
+    .chip-green{background:#ecfdf5;color:#15803d;}
+
+    /* search */
+    .t-search{padding:11px 14px;border-bottom:1px solid #f1f5f9;}
+    .search-inner{
+    display:flex;align-items:center;gap:7px;
+    background:#f8faff;border:1px solid var(--line);
+    border-radius:9px;padding:8px 11px;
+    }
+    .search-inner input{
+    border:none;outline:none;background:transparent;
+    font-size:13px;color:var(--ink-700);width:100%;font-family:inherit;
+    }
+    .search-inner input::placeholder{color:var(--ink-400);}
+
+    /* list — fixed height agar bisa scroll */
+    .soal-list{
+    height:260px;        /* tampil ~6 soal, sisanya scroll */
+    overflow-y:auto;
+    padding:9px 11px;
+    flex:none;           /* jangan ikut flex stretch */
+    }
+    .soal-list::-webkit-scrollbar{width:4px;}
+    .soal-list::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:4px;}
+    .soal-list::-webkit-scrollbar-track{background:transparent;}
+
+    .soal-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:10px;
+    cursor:pointer;transition:background .12s;
+    margin-bottom:3px;border:1.5px solid transparent;
+    user-select:none;
+    }
+    .soal-item:hover{background:#f5f7ff;}
+    .soal-item.sel{background:#eef2ff;border-color:#c7d2fe;}
+    .soal-item.active-side:hover{background:#f0fdf4;}
+    .soal-item.active-side.sel{background:#ecfdf5;border-color:#bbf7d0;}
+
+    .s-check{
+    width:18px;height:18px;border-radius:5px;
+    border:2px solid #c7d2fe;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:all .12s;
+    }
+    .soal-item.sel .s-check{background:#6366f1;border-color:#6366f1;}
+    .soal-item.active-side.sel .s-check{background:#16a34a;border-color:#16a34a;}
+    .s-check svg{display:none;}
+    .soal-item.sel .s-check svg{display:block;}
+
+    .s-body{flex:1;min-width:0;}
+    .s-no{font-size:10.5px;font-weight:700;color:var(--ink-400);margin-bottom:2px;}
+    .s-text{
+    font-size:13px;font-weight:400;color:var(--ink-700);
+    line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+    }
+    .soal-item.sel .s-text{color:var(--ink-900);font-weight:400;}
+    .s-cat{
+    font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;
+    background:#f1f5f9;color:#475569;white-space:nowrap;flex-shrink:0;
+    }
+
+    /* panel foot */
+    .t-panel-foot{
+    padding:11px 18px;border-top:1px solid #f1f5f9;
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:12.5px;color:var(--ink-500);
+    }
+    .sel-all{color:#4f46e5;font-weight:700;cursor:pointer;transition:color .15s;}
+    .sel-all:hover{text-decoration:underline;}
+    .sel-all.is-cancel{color:#e11d48;}
+    .sel-all.is-cancel:hover{color:#be123c;}
+
+    /* empty */
+    .empty-state{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:48px 20px;color:var(--ink-400);gap:10px;flex:1;
+    }
+    .empty-state p{font-size:13px;text-align:center;line-height:1.55;}
+
+    /* ── MIDDLE ACTIONS — horizontal row ── */
+    .transfer-mid{
+    display:flex;flex-direction:row;align-items:center;
+    justify-content:center;gap:12px;
+    padding:4px 0;
+    }
+    .t-btn{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:10px 22px;border-radius:11px;
+    border:none;cursor:pointer;font-size:13px;font-weight:700;
+    font-family:inherit;transition:all .15s;white-space:nowrap;
+    }
+    .t-btn.add{
+    background:linear-gradient(135deg,#6366f1,#3b82f6);color:#fff;
+    box-shadow:0 6px 14px -5px rgba(79,70,229,.5);
+    }
+    .t-btn.add:hover{filter:brightness(1.07);transform:translateY(-1px);}
+    .t-btn.rem{
+    background:#fff;color:#e11d48;
+    border:1.5px solid #fecdd3;
+    box-shadow:0 2px 6px -2px rgba(225,29,72,.12);
+    }
+    .t-btn.rem:hover{background:#fef2f2;transform:translateY(-1px);}
+    .t-btn:active{transform:translateY(0);}
+    /* divider vertikal kecil di antara 2 tombol */
+    .t-divider{width:1px;height:32px;background:linear-gradient(to bottom,transparent,#e7eaf3,transparent);}
+
+    /* ── SAVE BAR ── */
+    .save-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    background:#fff;border:1px solid var(--line);border-radius:14px;
+    padding:15px 22px;box-shadow:var(--sh-sm);
+    flex-wrap:wrap;gap:14px;
+    }
+    .sb-info{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-500);flex-wrap:wrap;}
+    .sb-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;
+    }
+    .sb-chip.indigo{background:#eef2ff;color:#4338ca;}
+    .sb-chip.green{background:#ecfdf5;color:#15803d;}
+    .sb-chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+    .btn-save{
+    display:inline-flex;align-items:center;gap:9px;
+    background:linear-gradient(135deg,#6366f1,#3b82f6);
+    color:#fff;border:none;cursor:pointer;
+    font-size:14px;font-weight:700;font-family:inherit;
+    padding:12px 26px;border-radius:11px;
+    box-shadow:0 8px 18px -6px rgba(79,70,229,.5);
+    transition:all .15s;
+    }
+    .btn-save:hover{filter:brightness(1.05);transform:translateY(-1px);}
+    .btn-save:active{transform:translateY(0);}
+
+    /* toast */
+    .toast{
+    position:fixed;bottom:28px;right:28px;z-index:999;
+    background:#1e293b;color:#fff;
+    padding:13px 20px;border-radius:12px;
+    font-size:13.5px;font-weight:600;
+    display:flex;align-items:center;gap:10px;
+    box-shadow:0 12px 28px -8px rgba(0,0,0,.35);
+    transform:translateY(20px);opacity:0;
+    transition:all .28s cubic-bezier(.4,0,.2,1);
+    pointer-events:none;
+    }
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;}
+
+    /* overlay + sidebar drawer mobile */
+    .sidebar-overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.45);
+    backdrop-filter:blur(2px);z-index:40;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .25s,visibility .25s;
+    }
+    .sidebar-overlay.is-visible{opacity:1;visibility:visible;pointer-events:auto;}
+    .sidebar-close{
+    display:none;position:absolute;top:16px;right:16px;
+    width:32px;height:32px;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+    border-radius:8px;cursor:pointer;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:980px){
+    .app{grid-template-columns:1fr;}
+    .hamburger{display:flex;}
+    .sidebar{
+        position:fixed;top:0;left:0;height:100vh;width:264px;z-index:50;
+        transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+    }
+    .sidebar.is-open{transform:translateX(0);}
+    .sidebar-close{display:flex;}
+    .brand{padding-right:44px;}
+    .main{padding:20px 18px 40px;}
+    /* transfer-grid sudah vertikal by default, tidak perlu override */
+    }
+    @media(max-width:640px){
+    .period-bar{flex-direction:column;align-items:flex-start;}
+    .period-select-wrap{width:100%;}
+    .period-select{min-width:0;width:100%;}
+    .page-title{font-size:20px;}
+    .save-bar{flex-direction:column;align-items:flex-start;}
+    .btn-save{width:100%;justify-content:center;}
+    .uc-name,.uc-role{display:none;}
+    .user-chip{padding:6px;}
+    }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebarClose">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+  <div class="brand">
+    <div class="brand-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M4 6.5C4 5.67 4.67 5 5.5 5H13V19H5.5C4.67 19 4 18.33 4 17.5V6.5Z" stroke="white" stroke-width="1.6"/>
+        <path d="M20 6.5C20 5.67 19.33 5 18.5 5H13V19H18.5C19.33 19 20 18.33 20 17.5V6.5Z" stroke="white" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <div class="brand-text">Academic Service Response (ASR)<small>Admin Panel</small></div>
+  </div>
+
+  <div class="nav-label">Menu Utama</div>
+  <nav class="nav">
+    <a class="nav-item" href="{% url 'dashboard_admin' %}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/>
+      </svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="{% url 'list_mahasiswa' %}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M4.5 19.5C4.5 16.46 7.69 14 12 14C16.31 14 19.5 16.46 19.5 19.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      Data Mahasiswa
+    </a>
+    <a class="nav-item" href="{% url 'list_periods' %}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.7"/>
+        <path d="M3 9H21M8 2V5M16 2V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      Kelola Periode
+    </a>
+    <a class="nav-item" href="{% url 'list_questions' %}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.7" />
+          <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+      </svg>
+      Bank Soal
+    </a>
+  </nav>
+
+  <div class="nav-section-label">Hasil Analisis</div>
+  <nav class="nav">
+    <a href="{% url 'analysis_view' %}?fakultas=FAST" class="nav-item" href="{% url 'list_periods' %}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Analisis FAST
+    </a>
+    <a href="{% url 'analysis_view' %}?fakultas=FEB" class="nav-item" href="{% url 'list_periods' %}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Analisis FEB
+    </a>
+  </nav>
+
+  <div class="nav-spacer"></div>
+  <div class="sidebar-foot">
+    <a class="logout-link" href="{% url 'logout' %}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M9 21H5.5C4.67 21 4 20.33 4 19.5V4.5C4 3.67 4.67 3 5.5 3H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        <path d="M16 17L21 12L16 7M21 12H9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <!-- Topbar -->
+  <div class="topbar">
+    <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+    <div>
+      <h1 class="page-title">Atur Pertanyaan Pada Periode</h1>
+      <div class="page-sub">Atur soal yang aktif untuk setiap periode kuesioner.</div>
+    </div>
+    <div class="user-chip">
+      <div class="avatar">AD</div>
+      <div><div class="uc-name">Admin</div></div>
+    </div>
+  </div>
+
+  <!-- Period Bar -->
+  <div class="period-bar">
+    <div class="pb-left">
+      <div class="pb-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.7"/>
+          <path d="M3 9H21M8 2V5M16 2V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="pb-title">Periode Terpilih</div>
+      </div>
+    </div>
+    <div class="period-info-wrap" style="display: flex; align-items: center; gap: 10px;">
+      <div class="period-badge-text" style="font-weight: 600; color: #334155; font-size: 15.5px;">
+        {{ period.semester }} {{ period.tahun_ajaran }}
+      </div>
+
+      {% if period.status == 'Aktif' %}
+        <span class="badge" style="background-color: #10b981; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+          Aktif
+        </span>
+      {% else %}
+        <span class="badge" style="background-color: #64748b; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+          Tidak Aktif
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Transfer Grid -->
+  <div class="transfer-grid">
+
+    <!-- KIRI: Bank Soal -->
+    <div class="t-panel">
+      <div class="t-panel-head">
+        <div class="tph-left">
+          <div class="tph-icon icon-bank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M8 9H16M8 13H16M8 17H12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="tph-title">Bank Soal</div>
+            <div class="tph-sub">Tersedia untuk ditambahkan</div>
+          </div>
+        </div>
+        <span class="count-chip chip-indigo" id="bankCount">0 soal</span>
+      </div>
+      <div class="t-search">
+        <div class="search-inner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.8"/>
+            <path d="M21 21L16.65 16.65" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="searchBank" placeholder="Cari soal di bank...">
+        </div>
+      </div>
+      <div class="soal-list" id="bankList"></div>
+      <div class="t-panel-foot">
+        <span id="bankSelLabel">0 dipilih</span>
+        <span class="sel-all" id="selAllBank" onclick="toggleSelectAll('bank')">Pilih Semua</span>
+      </div>
+    </div>
+
+    <!-- TENGAH: Tombol -->
+    <div class="transfer-mid">
+      <button class="t-btn add" onclick="moveToActive()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M12 19L6 13M12 19L18 13" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Tambah
+      </button>
+      <div class="t-divider"></div>
+      <button class="t-btn rem" onclick="moveToBank()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M12 19V5M12 5L6 11M12 5L18 11" stroke="#e11d48" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Hapus
+      </button>
+    </div>
+
+    <!-- KANAN: Soal Aktif -->
+    <div class="t-panel">
+      <div class="t-panel-head">
+        <div class="tph-left">
+          <div class="tph-icon icon-active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M9 12L11 14L15.5 9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/>
+            </svg>
+          </div>
+          <div>
+            <div class="tph-title">Soal Aktif Periode Ini</div>
+            <div class="tph-sub">Akan muncul di kuesioner</div>
+          </div>
+        </div>
+        <span class="count-chip chip-green" id="activeCount">0 soal</span>
+      </div>
+      <div class="t-search">
+        <div class="search-inner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.8"/>
+            <path d="M21 21L16.65 16.65" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="searchActive" placeholder="Cari soal aktif...">
+        </div>
+      </div>
+      <div class="soal-list" id="activeList"></div>
+      <div class="t-panel-foot">
+        <span id="activeSelLabel">0 dipilih</span>
+        <span class="sel-all" id="selAllActive" onclick="toggleSelectAll('active')">Pilih Semua</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Bar -->
+  <div class="save-bar">
+    <div class="sb-info">
+      <span>Status pengaturan —</span>
+      <span class="sb-chip green"><span class="dot"></span><span id="sbActive">0 soal aktif</span></span>
+      <span class="sb-chip indigo"><span class="dot"></span><span id="sbBank">0 soal di bank</span></span>
+    </div>
+    <button class="btn-save" onclick="saveSettings()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path d="M19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16L21 8V19C21 20.1 20.1 21 19 21Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+        <path d="M17 21V13H7V21M7 3V8H15" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+      Simpan Pengaturan
+    </button>
+  </div>
+</main>
+</div>
+
+<!-- 1. Mengirim data dari Django ke JavaScript via json_script -->
+{{ all_questions_json|json_script:"all-questions-data" }}
+{{ active_question_ids_json|json_script:"active-ids-data" }}
+<!-- 2. Form tersembunyi untuk mengambil CSRF Token Django -->
+<form id="csrfForm" style="display:none;">
+    {% csrf_token %}
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'assets/js/alert.js' %}"></script>
+<script>
+  const MASTER = JSON.parse(document.getElementById('all-questions-data').textContent || '[]');
+  const INITIAL_ACTIVE_IDS = JSON.parse(document.getElementById('active-ids-data').textContent || '[]');
+
+  const activeIdsSet = new Set(INITIAL_ACTIVE_IDS);
+  let bankSoal   = MASTER.filter(s => !activeIdsSet.has(s.id));
+  let activeSoal = MASTER.filter(s => activeIdsSet.has(s.id));
+  let bankSel    = new Set();
+  let activeSel  = new Set();
+
+  /* ── RENDER ── */
+  const CHECKSVG = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const EMPTY_BANK = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.67 4.67 4 5.5 4H18.5C19.33 4 20 4.67 20 5.5V18.5C20 19.33 19.33 20 18.5 20H5.5C4.67 20 4 19.33 4 18.5V5.5Z" stroke="#cbd5e1" stroke-width="1.5"/><path d="M8 9H16M8 13H12" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round"/></svg><p>Bank soal kosong.<br>Semua soal sudah aktif.</p></div>`;
+  const EMPTY_ACTIVE = `<div class="empty-state"><svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M9 12L11 14L15.5 9.5" stroke="#cbd5e1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#cbd5e1" stroke-width="1.5"/></svg><p>Belum ada soal aktif.<br>Tambahkan dari bank soal.</p></div>`;
+
+  function renderList(arr, sel, side, listId, filterVal){
+    const el = document.getElementById(listId);
+    const f  = filterVal.toLowerCase();
+    const filtered = arr.filter(s =>{
+      const qText = (s.question_text || s.text || '').toLowerCase();
+      const qKat  = (s.category || s.categ || '').toLowerCase();
+      return qText.includes(f) || qKat.includes(f);
+      });
+    if(!filtered.length){ el.innerHTML = side==='bank' ? EMPTY_BANK : EMPTY_ACTIVE; return; }
+    const isSel = id => sel.has(id);
+    el.innerHTML = filtered.map(s => `
+      <div class="soal-item${isSel(s.id)?' sel':''}${side==='active'?' active-side':''}"
+          onclick="toggle('${side}',${s.id})">
+        <div class="s-check">${isSel(s.id)?CHECKSVG:''}</div>
+        <div class="s-body">
+          <div class="s-text">${s.question_text || s.text}</div>
+        </div>
+        <span class="s-cat">${s.category || s.categ}</span>
+      </div>`).join('');
+  }
+
+  function render(){
+    const fb = document.getElementById('searchBank').value;
+    const fa = document.getElementById('searchActive').value;
+    renderList(bankSoal,   bankSel,   'bank',   'bankList',   fb);
+    renderList(activeSoal, activeSel, 'active', 'activeList', fa);
+    document.getElementById('bankCount').textContent    = `${bankSoal.length} soal`;
+    document.getElementById('activeCount').textContent  = `${activeSoal.length} soal`;
+    document.getElementById('bankSelLabel').textContent   = `${bankSel.size} dipilih`;
+    document.getElementById('activeSelLabel').textContent = `${activeSel.size} dipilih`;
+    document.getElementById('sbActive').textContent = `${activeSoal.length} soal aktif`;
+    document.getElementById('sbBank').textContent   = `${bankSoal.length} soal di bank`;
+    // Sync label & state tombol Pilih Semua / Batalkan
+    updateSelAllBtn('bank');
+    updateSelAllBtn('active');
+  }
+
+  function updateSelAllBtn(side){
+    const btn  = document.getElementById(side==='bank' ? 'selAllBank' : 'selAllActive');
+    const sel  = side==='bank' ? bankSel : activeSel;
+    const soal = side==='bank' ? bankSoal : activeSoal;
+    if(!btn) return;
+    const allSelected = soal.length > 0 && soal.every(s => sel.has(s.id));
+    if(allSelected){
+      btn.textContent = 'Batalkan Semua';
+      btn.classList.add('is-cancel');
+    } else {
+      btn.textContent = 'Pilih Semua';
+      btn.classList.remove('is-cancel');
+    }
+  }
+
+  function toggle(side, id){
+    const sel = side==='bank' ? bankSel : activeSel;
+    sel.has(id) ? sel.delete(id) : sel.add(id);
+    render();
+  }
+
+  function toggleSelectAll(side){
+    const btn  = document.getElementById(side==='bank' ? 'selAllBank' : 'selAllActive');
+    const sel  = side==='bank' ? bankSel : activeSel;
+    const soal = side==='bank' ? bankSoal : activeSoal;
+    const allSelected = soal.length > 0 && soal.every(s => sel.has(s.id));
+
+    if(allSelected){
+      // Batalkan semua
+      soal.forEach(s => sel.delete(s.id));
+    } else {
+      // Pilih semua
+      soal.forEach(s => sel.add(s.id));
+    }
+    render();
+  }
+
+  function moveToActive(){
+    if(!bankSel.size) return;
+    const moving = bankSoal.filter(s=>bankSel.has(s.id));
+    activeSoal = [...activeSoal, ...moving];
+    bankSoal   = bankSoal.filter(s=>!bankSel.has(s.id));
+    bankSel.clear(); render();
+  }
+
+  function moveToBank(){
+    if(!activeSel.size) return;
+    const moving = activeSoal.filter(s=>activeSel.has(s.id));
+    bankSoal   = [...bankSoal, ...moving];
+    activeSoal = activeSoal.filter(s=>!activeSel.has(s.id));
+    activeSel.clear(); render();
+  }
+
+  function saveSettings(){
+    const activeQuestionIds = activeSoal.map(s => s.id);
+    const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+    const csrfToken = csrfInput ? csrfInput.value : '';
+
+    fetch(window.location.href, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify({
+        questions: activeQuestionIds
+      })
+    })
+    .then(response => {
+      if(!response.ok) throw new Error('Network response was not ok');
+      return response.json()
+      })
+    .then(data => {
+      if (data.success) {
+        showToast('success', `Tersimpan ${activeSoal.length} soal aktif pada periode ini.`);
+      } else {
+        showToast('error', `Gagal menyimpan: ${data.error || 'Terjadi kesalahan'}`);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      showToast('error', 'Gagal terhubung ke server.');
+    });
+  }
+
+  /* ── Search ── */
+  document.getElementById('searchBank').addEventListener('input',  ()=>render());
+  document.getElementById('searchActive').addEventListener('input', ()=>render());
+
+  /* ── Hamburger ── */
+  const hamburgerBtn   = document.getElementById('hamburgerBtn');
+  const sidebar        = document.getElementById('sidebar');
+  const overlay        = document.getElementById('sidebarOverlay');
+  const sidebarClose   = document.getElementById('sidebarClose');
+  if(hamburgerBtn) {
+    function openSidebar(){ sidebar.classList.add('is-open'); overlay.classList.add('is-visible'); hamburgerBtn.classList.add('is-open'); document.body.style.overflow='hidden'; }
+    function closeSidebar(){ sidebar.classList.remove('is-open'); overlay.classList.remove('is-visible'); hamburgerBtn.classList.remove('is-open'); document.body.style.overflow=''; }
+    hamburgerBtn.addEventListener('click', ()=>sidebar.classList.contains('is-open')?closeSidebar():openSidebar());
+    if(sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
+    if(overlay) overlay.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSidebar(); });
+    window.addEventListener('resize', ()=>{ if(window.innerWidth>980) closeSidebar(); });
+  }
+  render();
+</script>
+</body>
+</html>

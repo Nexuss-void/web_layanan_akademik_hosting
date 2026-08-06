@@ -4,6 +4,27 @@
         <main class="main">
             <!-- HERO -->
             <div class="content-body">
+                <!-- TOPBAR -->
+                <div class="topbar">
+                    <!-- Hamburger: hanya tampil di mobile -->
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div>
+                        <h1 class="page-title">Kelola Pertanyaan</h1>
+                        <div class="page-sub">Kelola data pertanyaan disini.</div>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="user-chip">
+                            <div class="avatar">AD</div>
+                            <div>
+                                <div class="name">Admin</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="profile-hero">
                     <div class="profile-hero-text">
                         <div class="profile-hero-name">{% if question %}Edit Data Pertanyaan Kuesioner{% else %}Input Data Pertanyaan Kuesioner{% endif %}</div>
@@ -29,33 +50,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Kategori <span class="required-dot"></span></label>
-                                    <select name="category" required>
+                                    <select name="category" class="select-category" required>
                                         <option value="" disabled {% if not question %} selected {% endif %}>— Pilih Kategori —</option>
-                                        <option value="Academic" {% if question and question.category == 'Academic' %}selected{% endif %}>Academic</option>
-                                        <option value="Non-Academic" {% if question and question.category == 'Non-Academic' %}selected{% endif %}>Non-Academic</option>
-                                        <option value="Reputation" {% if question and question.category == 'Reputation' %}selected{% endif %}>Reputation</option>
-                                        <option value="Access" {% if question and question.category == 'Access' %}selected{% endif %}>Access</option>
-                                        <option value="Program Issues" {% if question and question.category == 'Program Issues' %}selected{% endif %}>Program Issues</option>
-                                        <option value="Understanding" {% if question and question.category == 'Understanding' %}selected{% endif %}>Understanding</option>
+                                        <option value="Akademik" {% if question and question.category == 'Akademik' %}selected{% endif %}>Akademik</option>
+                                        <option value="Non-Akademik" {% if question and question.category == 'Non-Akademik' %}selected{% endif %}>Non-Akademik</option>
+                                        <option value="Reputasi Universitas" {% if question and question.category == 'Reputasi Universitas' %}selected{% endif %}>Reputasi Universitas</option>
+                                        <option value="Aksesibilitas/Akses" {% if question and question.category == 'Aksesibilitas/Akses' %}selected{% endif %}>Aksesibilitas/Akses</option>
+                                        <option value="Isu Program Akademik" {% if question and question.category == 'Isu Program Akademik' %}selected{% endif %}>Isu Program Akademik</option>
+                                        <option value="Pemahaman Kebutuhan" {% if question and question.category == 'Pemahaman Kebutuhan' %}selected{% endif %}>Pemahaman Kebutuhan</option>
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Periode <span class="required-dot"></span></label>
-                                    <select name="period" required>
-                                        <option value="" disabled {% if not question %} selected {% endif %}>— Pilih Periode —</option>
-                                        {% for period in periods %}
-                                            {% if period.status == 'Aktif' or question.period.id == period.id %}
-                                                <option value="{{ period.id }}" {% if question.period.id == period.id %}selected{% endif %}>
-                                                    {{ period.semester }} ({{ period.tahun_ajaran }})
-                                                </option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Nomor Urutan Pertanyaan <span class="required-dot"></span></label>
-                                    <input type="number" name="order_number" required 
-                                    value="{% if question %}{{ question.order_number }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -74,8 +77,6 @@
                     </div>
                 </form>
             </div>
-        </main>
-    </div>
-    <script src="{% static 'assets/js/sidebar.js' %}"></script>
+    {% include 'layout_admin_dashboard/footer.html' %}
 </body>
 </html>

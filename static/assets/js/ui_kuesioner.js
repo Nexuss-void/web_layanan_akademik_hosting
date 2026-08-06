@@ -69,6 +69,10 @@ function captureImage() {
             .getElementById('question')
             .dataset
             .questionId;
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const currentStep = parseInt(pathParts[2] || 0, 10);
+    const periodId = pathParts[1];
+    const csrfToken = getCookie('csrftoken') || (document.querySelector('[name=csrfmiddlewaretoken]') ? document.querySelector('[name=csrfmiddlewaretoken]').value : '');
 
     captureBtn.disabled = true;
     captureBtn.innerHTML =
@@ -83,25 +87,32 @@ function captureImage() {
             },
             body: JSON.stringify({
                 image: imageData,
-                question_id: questionId
+                question_id: questionId,
+                period_id: periodId,
+                current_step: currentStep
             })
         }
-    ).then(response => response.json())
+    ).then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP Error Status: ${response.status}`);
+        }
+        return response.json();
+    })
         .then(data => {
             console.log(data);
             if (data.success) {
                 captureBtn.innerHTML =
                     '✓ Berhasil';
-                if (data.next_question) {
+                if (data.is_completed) {
+                    window.location.href =
+                        '/dashboard-user/';
+                } else {
                     window.location.href =
                         '/kuesioner/' +
                         data.period +
                         '/' +
-                        data.next_question +
+                        data.next_step +
                         '/';
-                } else {
-                    window.location.href =
-                        '/dashboard-user/';
                 }
             } else {
                 captureBtn.disabled = false;
@@ -121,4 +132,19 @@ function captureImage() {
             showToast('error', 'Terjadi Kesalahan');
             console.error(error);
         });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

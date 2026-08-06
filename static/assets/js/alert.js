@@ -7,6 +7,5 @@ function showToast(icon, message) {
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
-        allowOutsideClick: false
     });
 }
