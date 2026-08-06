@@ -2,7 +2,7 @@ name: Hubungkan ke Hugging Face
 on:
   push:
     branches: [ main ]
-
+  workflow_dispatch:
 jobs:
   sync-to-hub:
     runs-on: ubuntu-latest
