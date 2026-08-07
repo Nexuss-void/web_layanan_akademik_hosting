@@ -1,5 +1,6 @@
 import uuid
 from django.db.models import Q
+from django.db.models.aggregates import Count
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group
@@ -97,7 +98,18 @@ def admin_view(request):
     data_feb = [0] * len(category_labels)
 
     if period_active:
-        answers=HasilKuesioner.objects.filter(question__period_questions=period_active)
+        total_question = period_active.questions.count()
+        completed_sessions = (
+            HasilKuesioner.objects
+            .filter(
+                question__period_questions=period_active
+            )
+            .values("session_id")
+            .annotate(total_answer=Count("id"))
+            .filter(total_answer=total_question)
+            .values_list("session_id", flat=True)
+        )
+        answers=HasilKuesioner.objects.filter(question__period_questions=period_active,session_id__in=completed_sessions)
         # Metric Card: Total Responden
         total_respondents=answers.values('user').distinct().count()
 

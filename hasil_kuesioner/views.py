@@ -1,5 +1,6 @@
 from itertools import count
 
+from django.db.models.aggregates import Count
 from django.shortcuts import get_object_or_404, render,redirect
 from users.views import is_admin
 from django.contrib.auth.decorators import user_passes_test
@@ -58,6 +59,17 @@ def analysis_view(request):
 
     analysis={}
     if selected_period:
+        total_question = selected_period.questions.count()
+        completed_sessions = (
+            HasilKuesioner.objects
+            .filter(
+                question__period_questions=selected_period
+            )
+            .values("session_id")
+            .annotate(total_answer=Count("id"))
+            .filter(total_answer=total_question)
+            .values_list("session_id", flat=True)
+        )
         categories=[
             "Akademik",
             "Non-Akademik",
@@ -68,6 +80,7 @@ def analysis_view(request):
         ]
         for category in categories:
             result=HasilKuesioner.objects.filter(
+                session_id__in=completed_sessions,
                 question__in=selected_period.questions.filter(category=category),
                 user__profilmahasiswa__fakultas=fakultas_name
             )
