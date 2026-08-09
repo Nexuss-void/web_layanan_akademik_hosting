@@ -76,7 +76,7 @@ def profil_mahasiswa_view(request):
             semester = 2
 
         elif jurusan == 'Teknik Informatika':
-            fakultas = 'Fakultas Sains danTeknik'
+            fakultas = 'Fakultas Sains dan Teknologi'
             semester = 6
 
         else:

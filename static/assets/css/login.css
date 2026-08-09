@@ -17,7 +17,7 @@ body {
 .container {
     display: flex;
     width: 100%;
-    max-width: 1200px;
+    max-width: 500px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: 20px;
@@ -27,7 +27,7 @@ body {
 
 .login-section {
     flex: 1;
-    padding: 60px 50px;
+    padding: 40px;
     background: rgba(255, 255, 255, 0.95);
     display: flex;
     flex-direction: column;
@@ -230,8 +230,9 @@ body {
     position: flex;
     bottom: 20px;
     right: 20px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(14, 14, 14, 0.8);
     font-size: 12px;
+    padding-top: 30px;
 }
 
 @media (max-width: 768px) {
@@ -259,7 +260,7 @@ body {
     margin-bottom: 15px;
     border-radius: 5px;
     font-size: 0.95rem;
-    text-align: center;
+    text-align: left;
 }
 
 .alert-message.success {
