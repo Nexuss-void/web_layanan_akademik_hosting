@@ -48,7 +48,7 @@
                                 <div class="form-group">
                                     <label>Semester <span class="required-dot"></span></label>
                                     <select name="semester" required>
-                                        <option value="" disabled {% if not period %} selected {% endif %}>— Pilih Semester —</option>
+                                        <option value="" disabled {% if not period %} selected {% endif %}>Pilih Semester</option>
                                         <option value="Ganjil" {% if period and period.semester == 'Ganjil' %}selected{% endif %}>Ganjil</option>
                                         <option value="Genap" {% if period and period.semester == 'Genap' %}selected{% endif %}>Genap</option>
                                     </select>
@@ -59,10 +59,10 @@
                                         maxlength="20" placeholder="Contoh: 2025/2026"
                                         value="{% if period %}{{ period.tahun_ajaran }}{% endif %}">
                                 </div>
-                                <div class="form-group full">
+                                <div class="form-group">
                                     <label>Status <span class="required-dot"></span></label>
                                     <select name="status" class="select-category" required>
-                                        <option value="" disabled {% if not period %} selected {% endif %}>— Pilih Status —</option>
+                                        <option value="" disabled {% if not period %} selected {% endif %}>Pilih Status Periode</option>
                                         <option value="Aktif" {% if period and period.status == 'Aktif' %}selected{% endif %}>Aktif</option>
                                         <option value="Tidak Aktif" {% if period and period.status == 'Tidak Aktif' %}selected{% endif %}>Tidak Aktif</option>
                                     </select>

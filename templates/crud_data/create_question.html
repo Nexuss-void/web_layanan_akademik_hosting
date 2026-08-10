@@ -50,14 +50,22 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Kategori <span class="required-dot"></span></label>
-                                    <select name="category" class="select-category" required>
-                                        <option value="" disabled {% if not question %} selected {% endif %}>— Pilih Kategori —</option>
+                                    <select name="category" required>
+                                        <option value="" disabled {% if not question %} selected {% endif %}>Pilih Kategori Pertanyaan</option>
                                         <option value="Akademik" {% if question and question.category == 'Akademik' %}selected{% endif %}>Akademik</option>
                                         <option value="Non-Akademik" {% if question and question.category == 'Non-Akademik' %}selected{% endif %}>Non-Akademik</option>
                                         <option value="Reputasi Universitas" {% if question and question.category == 'Reputasi Universitas' %}selected{% endif %}>Reputasi Universitas</option>
                                         <option value="Aksesibilitas/Akses" {% if question and question.category == 'Aksesibilitas/Akses' %}selected{% endif %}>Aksesibilitas/Akses</option>
                                         <option value="Isu Program Akademik" {% if question and question.category == 'Isu Program Akademik' %}selected{% endif %}>Isu Program Akademik</option>
                                         <option value="Pemahaman Kebutuhan" {% if question and question.category == 'Pemahaman Kebutuhan' %}selected{% endif %}>Pemahaman Kebutuhan</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status <span class="required-dot"></span></label>
+                                    <select name="status" required>
+                                        <option value="" disabled {% if not period %} selected {% endif %}>— Pilih Status Pertanyaan—</option>
+                                        <option value="Aktif" {% if question and question.status == 'Aktif' %}selected{% endif %}>Aktif</option>
+                                        <option value="Tidak Aktif" {% if question and question.status == 'Tidak Aktif' %}selected{% endif %}>Tidak Aktif</option>
                                     </select>
                                 </div>
                             </div>

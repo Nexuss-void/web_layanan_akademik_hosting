@@ -45,7 +45,8 @@ def create_question(request):
     if request.method == 'POST':   
         Question.objects.create(
             question_text=request.POST.get('question_text'),
-            category=request.POST.get('category')
+            category=request.POST.get('category'),
+            status=request.POST.get('status')
         )
         messages.success(request,'Pertanyaan berhasil ditambahkan')
         return redirect('list_questions')
@@ -82,14 +83,13 @@ def list_periods(request):
 
 @user_passes_test(is_admin)
 def list_questions(request):
-    period_filter=request.GET.get('period')
+    status_filter=request.GET.get('status')
     category_filter=request.GET.get('category')
     questions=Question.objects.all().order_by('-id')
-    periods=PeriodQuestion.objects.filter(status='Aktif')
     categories=Question.objects.values_list('category', flat=True).distinct().order_by('category')
 
-    if period_filter:
-        questions=questions.filter(period_questions__id=period_filter)
+    if status_filter:
+        questions=questions.filter(status=status_filter)
     if category_filter:
         questions=questions.filter(category=category_filter)
 
@@ -100,9 +100,8 @@ def list_questions(request):
         request,
         'crud_data/list_question.html',{
             "questions":questions,
-            "periods":periods,
             "categories":categories,
-            "selected_period":period_filter,
+            "selected_status":status_filter,
             "selected_category":category_filter
         }
     )
@@ -131,6 +130,7 @@ def edit_question(request,pk):
     if request.method =='POST':
         question.question_text = request.POST.get('question_text')
         question.category = request.POST.get('category')
+        question.status=request.POST.get('status')
         question.save()
         messages.success(request,'Pertanyaan berhasil diperbaharui')
         return redirect('list_questions')
@@ -154,7 +154,7 @@ def manage_questions(request,pk):
         except Exception as e:
             return JsonResponse({'success':'False','error': str(e)}, status=400)
         
-    all_questions=Question.objects.all().order_by('id')
+    all_questions=Question.objects.filter(status='Aktif').order_by('-id')
     active_question_ids=list(period.questions.values_list('id', flat=True))
     all_questions_list=[
         {

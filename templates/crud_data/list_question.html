@@ -33,16 +33,17 @@
                         </div>
                         <div class="filter-row">
                             <form method="GET" id="filterForm" class="filter-selection">
-                                <input type="hidden" name="search" value="">
-                                <select class="select-pill" name="period"
+                                <select class="select-pill" name="status"
                                     onchange="document.getElementById('filterForm').submit();">
-                                    <option value="">Semua Tahun Ajaran</option>
-                                    {% for period in periods %}
-                                        <option value="{{period.id}}"
-                                        {% if selected_period == period.id|stringformat:"s" or request.GET.period == period.id|stringformat:"s" %} selected {% endif %}>
-                                            {{period.tahun_ajaran}}
-                                        </option>
-                                    {% endfor %}
+                                    <option value="">Semua Status</option>
+                                    <option value="Aktif"
+                                    {% if selected_status == 'Aktif' or request.GET.status == 'Aktif' %} selected {% endif %}>
+                                        Aktif
+                                    </option>
+                                    <option value="Tidak Aktif"
+                                    {% if selected_status == 'Tidak Aktif' or request.GET.status == 'Tidak Aktif' %} selected {% endif %}>
+                                        Tidak Aktif
+                                    </option>
                                 </select>
                                 <select class="select-pill" name="category"
                                     onchange="document.getElementById('filterForm').submit();">
@@ -66,6 +67,7 @@
                                 <th>No</th>
                                 <th>Pertanyaan</th>
                                 <th>Kategori Pertanyaan</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -73,7 +75,7 @@
                             {% for item in questions %}
                             <tr>
                                 <td>{{ forloop.counter0|add:questions.start_index }}</td>
-                                <td>
+                                <td style="max-width: 250px;">
                                     <div class="person-cell">
                                         <div>
                                             <div class="person-name">{{ item.question_text }}</div>
@@ -84,6 +86,13 @@
                                     <div class="person-cell">
                                         <div>
                                             <div class="person-name">{{ item.category }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.status }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -109,7 +118,7 @@
                         <div class="pagination">
                             {% if questions.has_previous %}
                             <a class="page-btn"
-                                href="?page={{ questions.previous_page_number }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
+                                href="?page={{ questions.previous_page_number }}&status={{ request.GET.status }}&category={{ request.GET.category }}">
                                 Kembali
                             </a>
                             {% endif %}
@@ -120,14 +129,14 @@
                             </span>
                             {% else %}
                             <a class="page-btn"
-                                href="?page={{ num }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
+                                href="?page={{ num }}&status={{ request.GET.status }}&category={{ request.GET.category }}">
                                 {{ num }}
                             </a>
                             {% endif %}
                             {% endfor %}
                             {% if questions.has_next %}
                             <a class="page-btn"
-                                href="?page={{ questions.next_page_number }}&search={{ request.GET.search }}&period={{ request.GET.period }}&category={{ request.GET.category }}">
+                                href="?page={{ questions.next_page_number }}&status={{ request.GET.status }}&category={{ request.GET.category }}">
                                 Lanjut
                             </a>
                             {% endif %}

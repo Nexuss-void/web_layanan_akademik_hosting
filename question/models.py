@@ -11,7 +11,13 @@ class Question(models.Model):
     ("Isu Program Akademik","Isu Program Akademik"),
     ("Pemahaman Kebutuhan","Pemahaman Kebutuhan"),
     )
-    category = models.CharField(max_length=20, choices=CATEGORY,null=True, blank=True)
+    category = models.CharField(max_length=30, choices=CATEGORY,null=True, blank=True)
+
+    STATUS = (
+    ('Aktif', 'Aktif'),
+    ('Tidak Aktif', 'Tidak Aktif'),
+    )
+    status=models.CharField(max_length=20,choices=STATUS,default='Aktif')
 
     def __str__(self):
         return self.question_text

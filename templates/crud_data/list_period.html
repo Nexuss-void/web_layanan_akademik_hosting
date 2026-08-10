@@ -33,7 +33,6 @@
                         </div>
                         <div class="filter-row">
                             <form method="GET" id="filterForm" class="filter-selection">
-                                <input type="hidden" name="search" value="">
                                 <select class="select-pill" name="semester"
                                     onchange="document.getElementById('filterForm').submit();">
                                     <option value="">Semua Semester</option>
@@ -122,7 +121,7 @@
                         <div class="pagination">
                             {% if periods.has_previous %}
                             <a class="page-btn"
-                                href="?page={{ periods.previous_page_number }}&search={{ request.GET.search }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
+                                href="?page={{ periods.previous_page_number }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
                                 Kembali
                             </a>
                             {% endif %}
@@ -133,14 +132,14 @@
                             </span>
                             {% else %}
                             <a class="page-btn"
-                                href="?page={{ num }}&search={{ request.GET.search }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
+                                href="?page={{ num }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
                                 {{ num }}
                             </a>
                             {% endif %}
                             {% endfor %}
                             {% if periods.has_next %}
                             <a class="page-btn"
-                                href="?page={{ periods.next_page_number }}&search={{ request.GET.search }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
+                                href="?page={{ periods.next_page_number }}&semester={{ request.GET.semester }}&status={{ request.GET.status }}">
                                 Lanjut
                             </a>
                             {% endif %}
