@@ -79,7 +79,7 @@ def is_admin(user):
 
 @user_passes_test(is_admin)
 def admin_view(request):
-    period_active=PeriodQuestion.objects.filter(status='Aktif').order_by('-id').first()
+    period_active=PeriodQuestion.objects.filter(status='Aktif').order_by('id').first()
     total_respondents=0
     positive_satisfaction_rate="0%"
     total_fast_users=0

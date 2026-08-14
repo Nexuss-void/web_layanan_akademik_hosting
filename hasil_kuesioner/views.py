@@ -43,7 +43,7 @@ def hapus_hasil(request, session_id):
 
 @user_passes_test(is_admin)
 def analysis_view(request):
-    periods=PeriodQuestion.objects.filter(status="Aktif").order_by('-id')
+    periods=PeriodQuestion.objects.filter(status="Aktif").order_by('id')
     selected_period_id = request.GET.get('period')
     selected_fakultas = request.GET.get('fakultas', 'FAST')
     fakultas_name = 'Fakultas Sains dan Teknologi' if selected_fakultas == 'FAST' else 'Fakultas Ekonomi dan Bisnis'
