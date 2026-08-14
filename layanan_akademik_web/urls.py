@@ -4,14 +4,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from users import views as user_views
 from period_question import views as period_views
-from hasil_kuesioner import views as hasil_views
+from profil_mahasiswa import views as edit_profil_view
 
 urlpatterns = [
     path('adminonly/', admin.site.urls),
 
     path('dashboard-admin/data-mahasiswa/', user_views.list_mahasiswa, name='list_mahasiswa'),
-    path('dashboard-admin/data-mahasiswa/periode/<int:user_id>/', period_views.list_periods_mahasiswa, name='list_periods_mahasiswa'),
-    path('dashboard-admin/data-mahasiswa/detail-hasil/<int:user_id>/<int:period_id>/', hasil_views.detail_hasil, name='detail_hasil'),
+    path('dashboard-admin/data-mahasiswa/<int:user_id>', user_views.detail_mahasiswa, name='detail_mahasiswa'),
+    path('dashboard-admin/data-mahasiswa/<int:user_id>/edit', edit_profil_view.edit_profil, name='edit_profil'),
+    path('manage-questions/', period_views.manage_questions, name='manage_questions'),
 
     path('', include('users.urls')),
     path('hasil-kuesioner/', include('hasil_kuesioner.urls')),

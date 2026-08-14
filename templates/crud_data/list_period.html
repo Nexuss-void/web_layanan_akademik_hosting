@@ -1,36 +1,13 @@
 {% load static %}
 {% include 'layout_admin_dashboard/header.html' %}
-        <!-- MAIN -->
-        <main class="main">
-            <!-- TABLE PANEL -->
-            <div class="content-body">
-                <!-- TOPBAR -->
-                <div class="topbar">
-                    <!-- Hamburger: hanya tampil di mobile -->
-                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                    <div>
-                        <h1 class="page-title">Data Periode</h1>
-                        <div class="page-sub">Kelola daftar data periode disini.</div>
-                    </div>
-                    <div class="topbar-right">
-                        <div class="user-chip">
-                            <div class="avatar">AD</div>
-                            <div>
-                                <div class="name">Admin</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- TITLE PAGE -->
+                <div class="page-header">
+                    <h1 class="page-title">Data Periode</h1>
+                    <div class="page-sub">Kelola daftar data periode disini.</div>
                 </div>
+                
                 <div class="panel">
                     <div class="panel-head">
-                        <div>
-                            <div class="panel-title">Data Periode</div>
-                            <div class="panel-sub">Pilih periode pada daftar untuk memasukkan soal ke periode tersebut</div>
-                        </div>
                         <div class="filter-row">
                             <form method="GET" id="filterForm" class="filter-selection">
                                 <select class="select-pill" name="semester"
@@ -64,7 +41,7 @@
                             </div>
                         </div>
                     </div>
-                    <table>
+                    <table class="table-no-hover">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -76,7 +53,7 @@
                         </thead>
                         <tbody>
                             {% for item in periods %}
-                            <tr class="clickable-row" data-href="{% url 'manage_questions' item.id %}" style="cursor: pointer;">
+                            <tr>
                                 <td>{{ forloop.counter0|add:periods.start_index }}</td>
                                 <td>
                                     <div class="person-cell">
@@ -160,13 +137,6 @@
                     );
                 {% endfor %}
             {% endif %}
-
-            const rows = document.querySelectorAll(".clickable-row");
-            rows.forEach(row => {
-                row.addEventListener("click", function() {
-                    window.location.href = this.dataset.href;
-                });
-            });
         });
     </script>
 </body>

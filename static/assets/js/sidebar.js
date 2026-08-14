@@ -1,55 +1,22 @@
-(function () {
-    'use strict';
+document.addEventListener("DOMContentLoaded", function () {
+    const appLayout = document.getElementById("appLayout");
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const sidebarClose = document.getElementById('sidebarClose');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-
-    if (!hamburgerBtn || !sidebar || !overlay) return;
-
-    /* ---------- helpers ---------- */
-    function openSidebar() {
-        sidebar.classList.add('is-open');
-        overlay.classList.add('is-visible');
-        hamburgerBtn.classList.add('is-open');
-        hamburgerBtn.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden'; // cegah scroll halaman
+    if (window.innerWidth <= 768 && appLayout) {
+        appLayout.classList.add("sidebar-collapsed");
     }
 
-    function closeSidebar() {
-        sidebar.classList.remove('is-open');
-        overlay.classList.remove('is-visible');
-        hamburgerBtn.classList.remove('is-open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
+    if (hamburgerBtn && appLayout) {
+        hamburgerBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            appLayout.classList.toggle("sidebar-collapsed");
+        });
     }
 
-    /* ---------- event listeners ---------- */
-    hamburgerBtn.addEventListener('click', function () {
-        const isOpen = sidebar.classList.contains('is-open');
-        isOpen ? closeSidebar() : openSidebar();
-    });
-
-    // Tombol X di dalam sidebar
-    if (sidebarClose) {
-        sidebarClose.addEventListener('click', closeSidebar);
+    if (sidebarOverlay && appLayout) {
+        sidebarOverlay.addEventListener("click", function () {
+            appLayout.classList.add("sidebar-collapsed");
+        });
     }
-
-    // Klik overlay → tutup sidebar
-    overlay.addEventListener('click', closeSidebar);
-
-    // Tekan Escape → tutup sidebar
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
-            closeSidebar();
-        }
-    });
-
-    // Jika window di-resize ke desktop → reset state agar tidak stuck
-    window.addEventListener('resize', function () {
-        if (window.innerWidth > 980) {
-            closeSidebar();
-        }
-    });
-})();
+});

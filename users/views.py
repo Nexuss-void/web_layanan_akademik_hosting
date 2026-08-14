@@ -79,7 +79,7 @@ def is_admin(user):
 
 @user_passes_test(is_admin)
 def admin_view(request):
-    period_active=PeriodQuestion.objects.filter(status='Aktif').order_by('id').first()
+    period_active=PeriodQuestion.objects.filter(status='Aktif').order_by('-id').first()
     total_respondents=0
     positive_satisfaction_rate="0%"
     total_fast_users=0
@@ -368,7 +368,6 @@ def list_mahasiswa(request):
         profile_mahasiswa=profile_mahasiswa.filter(
             Q(nama__icontains=search) |
             Q(nim__icontains=search) |
-            Q(user__email__icontains=search)|
             Q(jurusan__icontains=search)|
             Q(fakultas__icontains=search)
         )
@@ -386,5 +385,15 @@ def list_mahasiswa(request):
         {
         'search': search,
         'page_obj':page_obj,
+        }
+    )
+
+@user_passes_test(is_admin)
+def detail_mahasiswa(request,user_id):
+    info_mahasiswa=get_object_or_404(ProfilMahasiswa.objects.select_related('user'),user_id=user_id)
+
+    return render(request,'profil_mahasiswa/detail_mahasiswa.html', 
+        {
+            'info_mahasiswa':info_mahasiswa
         }
     )

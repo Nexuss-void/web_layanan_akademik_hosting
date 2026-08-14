@@ -1,29 +1,11 @@
 {% load static %}
 {% include 'layout_admin_dashboard/header.html' %}
-        <!-- MAIN -->
-        <main class="main">
-            <!-- DASHBOARD CONTENT AREA -->
-            <div class="content-body">
-                <!-- TOPBAR -->
-                <div class="topbar">
-                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                    <div>
-                        <h1 class="page-title">Dashboard Admin</h1>
-                        <div class="page-sub">Ringkasan visual evaluasi HEDPERF dan ekspresi wajah responden.</div>
-                    </div>
-                    <div class="topbar-right">
-                        <div class="user-chip">
-                            <div class="avatar">AD</div>
-                            <div>
-                                <div class="name">Admin</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- TITLE PAGE -->
+                <div class="page-header">
+                    <h1 class="page-title">Dashboard Admin</h1>
+                    <div class="page-sub">Ringkasan visual evaluasi HEDPERF dan ekspresi wajah responden.</div>
                 </div>
+
                 <!-- METRIC CARDS GRID -->
                 <div class="metrics-grid">
                     <!-- Metric Card 1: Periode Aktif -->
@@ -105,19 +87,16 @@
                         <path d="M12 8V12M12 16H12.01" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
                         <circle cx="12" cy="12" r="9" stroke="#94a3b8" stroke-width="2"/>
                     </svg>
-
                     <h3>Belum Ada Data Responden</h3>
-                    <p>
-                        Grafik akan ditampilkan setelah terdapat minimal satu mahasiswa
-                        yang mengisi kuesioner pada periode aktif.
-                    </p>
+                    <p>Grafik akan ditampilkan setelah terdapat minimal satu mahasiswa yang mengisi kuesioner pada periode aktif.</p>
                 </div>
                 {% endif %}
-            </div>
-    {% include 'layout_admin_dashboard/footer.html' %}
-    <!-- Script Pengolahan Grafik Chart.js -->
+
+            </div> <!-- END CONTENT BODY -->
+
+{% include 'layout_admin_dashboard/footer.html' %}
+
     <script>
-        // Ambil Data Context dari Backend Django secara Aman
         const categoryLabels = {{ category_labels|safe }};
         const dataFast = {{ data_fast|safe }};
         const dataFeb = {{ data_feb|safe }};

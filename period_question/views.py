@@ -143,8 +143,15 @@ def edit_question(request,pk):
     )
 
 @user_passes_test(is_admin)
-def manage_questions(request,pk):
-    period= get_object_or_404(PeriodQuestion,id=pk)
+def manage_questions(request,id=None):
+    periods= PeriodQuestion.objects.filter(status='Aktif').order_by('id')
+    select_id=request.GET.get('id')
+
+    if select_id:
+        period=get_object_or_404(PeriodQuestion,id=select_id,status='Aktif')
+    else:
+        period=periods.first()
+
     if request.method == 'POST':
         try:
             data=json.loads(request.body)
@@ -168,48 +175,9 @@ def manage_questions(request,pk):
     return render(
         request,
         'crud_data/manage_questions.html',{
+            'periods':periods,
             'period':period,
             'all_questions_json':all_questions_list,
             'active_question_ids_json':active_question_ids,
         }
     )
-
-def list_periods_mahasiswa(request,user_id):
-    profile_mahasiswa=get_object_or_404(ProfilMahasiswa,user_id=user_id)
-    all_periods = PeriodQuestion.objects.all().order_by('-tahun_ajaran')
-    status_filter = request.GET.get('status','')
-    periods_summary=[]
-
-    for period in all_periods:
-        active_questions_ids=list(period.questions.values_list('id',flat=True))
-        total_questions=len(active_questions_ids)
-        if total_questions==0:
-            continue
-
-        total_answers=HasilKuesioner.objects.filter(
-            user_id=user_id,
-            question__id__in=active_questions_ids
-        ).values('question_id').distinct().count()
-
-        if total_answers == 0:
-            status = 'Belum Diisi'
-        elif total_answers >= total_questions:
-            status = 'Selesai'
-        else:
-            status = 'Belum Selesai'
-
-        if status != 'Belum Diisi':
-            if status_filter and status != status_filter:
-                continue
-            periods_summary.append({
-                'user_id': user_id,
-                'period_id': period.id,
-                'tahun_ajaran': period.tahun_ajaran,
-                'semester': period.semester,
-                'status': status,
-                'progres_teks': f"Soal yang sudah dijawab: {total_answers} soal dari {total_questions} soal",
-            })
-    return render(request, 'profil_mahasiswa/list_mahasiswa_period.html', {
-        'profile_mahasiswa': profile_mahasiswa,
-        'periods_summary': periods_summary,
-    })

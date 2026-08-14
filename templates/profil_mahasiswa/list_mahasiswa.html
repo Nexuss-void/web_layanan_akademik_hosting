@@ -1,34 +1,13 @@
 {% load static %}
 {% include 'layout_admin_dashboard/header.html' %}
-        <!-- MAIN -->
-        <main class="main">
-            <!-- TABLE PANEL -->
-            <div class="content-body">
-                <div class="topbar">
-                    <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                    <div>
-                        <h1 class="page-title">Data Mahasiswa</h1>
-                        <div class="page-sub">Daftar Profil Mahasiswa.</div>
-                    </div>
-                    <div class="topbar-right">
-                        <div class="user-chip">
-                            <div class="avatar">AD</div>
-                            <div>
-                                <div class="name">Admin</div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- TITLE PAGE -->
+                <div class="page-header">
+                    <h1 class="page-title">Data Mahasiswa</h1>
+                    <div class="page-sub">Daftar informasi mahasiswa</div>
                 </div>
+                
                 <div class="panel">
                     <div class="panel-head">
-                        <div>
-                            <div class="panel-title">Data Profil Mahasiswa</div>
-                            <div class="panel-sub">Daftar informasi mahasiswa </div>
-                        </div>
                         <div class="filter-row">
                             <form method="GET" id="filterForm" class="filter-selection">
                                 <div class="search-box">
@@ -48,42 +27,47 @@
                             <tr>
                                 <th>Mahasiswa</th>
                                 <th>NIM</th>
-                                <th>Akademik</th>
-                                <th>Alamat</th>
+                                <th>Fakultas</th>
+                                <th>Jurusan</th>
+                                <th>Semester</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for item in page_obj %}
-                            <tr class="clickable-row" data-href="{% url 'list_periods_mahasiswa' item.user_id %}" style="cursor: pointer;">
+                            <tr class="clickable-row" data-href="{% url 'detail_mahasiswa' item.user_id %}" style="cursor: pointer;">
                                 <td style="max-width: 200px;">
                                     <div class="person-cell">
                                         <div class="person-avatar">{{ item.nama|slice:":2"|upper }}</div>
                                         <div>
                                             <div class="person-name">{{ item.nama }}</div>
-                                            <div class="person-email">{{ item.user.email }}</div>
-                                            <div class="person-email">{{ item.nomor_hp }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td style="max-width: 100px;">
+                                <td>
                                     <div class="person-cell">
                                         <div>
                                             <div class="person-name">{{ item.nim }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td style="max-width: 150px;">
+                                <td style="max-width: 100px;">
                                     <div class="person-cell">
                                         <div>
                                             <div class="person-name">{{ item.fakultas }}</div>
-                                            <div class="person-email">{{ item.jurusan }} | semester {{ item.semester }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td style="max-width: 200px;" title="{{ item.alamat }}">
+                                <td style="max-width: 150px;">
                                     <div class="person-cell">
                                         <div>
-                                            <div class="person-name">{{ item.alamat }}</div>
+                                            <div class="person-name">{{ item.jurusan }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="max-width: 150px;">
+                                    <div class="person-cell">
+                                        <div>
+                                            <div class="person-name">{{ item.semester }}</div>
                                         </div>
                                     </div>
                                 </td>

@@ -174,7 +174,7 @@ body {
     border: 1px solid var(--line);
     border-radius: 18px;
     box-shadow: var(--shadow-sm);
-    overflow: hidden;
+    overflow: auto;
 }
 
 .panel-head {
@@ -231,6 +231,11 @@ tbody tr:last-child td {
 
 tbody tr:hover {
     background: #fafbff;
+}
+
+.table-no-hover tbody tr:hover {
+    background: transparent !important;
+    cursor: default !important;
 }
 
 .no-cell {
@@ -338,35 +343,6 @@ tbody tr:hover {
     text-align: right;
 }
 
-/* BAR COLORS */
-.bar-angry {
-    background: #ef4444;
-}
-
-.bar-disgust {
-    background: #8b5cf6;
-}
-
-.bar-fear {
-    background: #a855f7;
-}
-
-.bar-happy {
-    background: #f59e0b;
-}
-
-.bar-sad {
-    background: #3b82f6;
-}
-
-.bar-surprise {
-    background: #f97316;
-}
-
-.bar-neutral {
-    background: #6366f1;
-}
-
 /* FACE IMAGE */
 .face-img {
     width: 80px;
@@ -397,6 +373,27 @@ tbody tr:hover {
     align-items: center;
     justify-content: center;
     color: #6366f1;
+}
+
+/* -------FOOTER------- */
+.asr-global-footer {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100%;
+    margin-bottom: 0 !important;
+    margin-top: auto;
+    box-sizing: border-box !important;
+    padding: 12px 24px;
+}
+
+.footer-bottom {
+    margin-top: 0px;
+    padding-top: 0px;
+    border-top: none;
+    text-align: center;
+    font-size: 0.78rem;
 }
 
 @media(max-width:900px) {

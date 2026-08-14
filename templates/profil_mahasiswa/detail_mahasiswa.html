@@ -1,0 +1,77 @@
+{% load static %}
+{% include 'layout_admin_dashboard/header.html' %}
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h1 class="page-title">Detail Mahasiswa</h1>
+                    <div class="page-sub">Informasi lengkap biodata dan status akademik mahasiswa.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 1: HERO / PROFILE HIGHLIGHT -->
+        <div class="profile-hero">
+            <div class="avatar" style="width: 72px; height: 72px; font-size: 26px; border: 3px solid rgba(255,255,255,0.3); flex-shrink: 0;">
+                {{ info_mahasiswa.nama|slice:":2"|upper }}
+            </div>
+            <div class="profile-hero-text">
+                <div class="profile-hero-name">{{ info_mahasiswa.nama|default:"-" }}</div>
+                <div class="profile-hero-sub">NIM: {{ info_mahasiswa.nim|default:"-" }}</div>
+                <div class="profile-hero-tag">
+                    <i class="fa-solid fa-graduation-cap"></i> {{ info_mahasiswa.fakultas }} | Jurusan {{ info_mahasiswa.jurusan }} | Semester {{ info_mahasiswa.semester|default:"-" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2: INFORMASI KONTAK & ALAMAT -->
+        <div class="panel" style="padding: 24px; margin-bottom: 20px;">
+            <h3 class="panel-title" style="margin-bottom: 18px; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-address-card" style="color: var(--indigo-600);"></i> Kontak & Informasi Pribadi
+            </h3>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label"><i class="fa-solid fa-envelope"></i> Email</div>
+                    <div class="info-value">{{ info_mahasiswa.user.email|default:"-" }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label"><i class="fa-solid fa-phone"></i> Nomor Telepon</div>
+                    <div class="info-value">{{ info_mahasiswa.nomor_hp|default:"-" }}</div>
+                </div>
+
+                <div class="info-item full-width">
+                    <div class="info-label"><i class="fa-solid fa-location-dot"></i> Alamat Lengkap</div>
+                    <div class="info-value">{{ info_mahasiswa.alamat|default:"-" }}</div>
+                </div>
+            </div>
+            <!-- AREA TOMBOL EDIT & KEMBALI / HAPUS -->
+            <div class="detail-actions" style="display: flex; justify-content: flex-end; gap: 12px; align-items: center;">
+                <a href="{% url 'list_mahasiswa' %}" class="btn btn-outline-primary" style="text-decoration: none;">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali
+                </a>
+                <a href="{% url 'edit_profil' info_mahasiswa.user.id %}" class="btn btn-primary" style="text-decoration: none;">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit Data
+                </a>
+            </div>
+        </div>
+    </div>
+    {% include 'layout_admin_dashboard/footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{% static 'assets/js/alert.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% if messages %}
+                {% for message in messages %}
+                    showToast(
+                        "{{ message.tags }}",
+                        "{{ message|escapejs }}"
+                    );
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+</body>
+</html>
