@@ -11,7 +11,15 @@
                     <div class="panel-head">
                         <div class="filter-row">
                             <form method="GET" id="filterForm" class="filter-selection">
-                                
+                                <div class="search-box">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.8" />
+                                        <path d="M21 21L16.65 16.65" stroke="#94a3b8" stroke-width="1.8"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                    <input type="text" name="search" placeholder="Cari mahasiswa..."
+                                        value="{{ request.GET.search }}">
+                                </div>
                                 <select class="select-pill" name="status" onchange="document.getElementById('filterForm').submit();">
                                     <option value="">Semua Status</option>
                                     <option value="Selesai" {% if status_filter == 'Selesai' or request.GET.status == 'Selesai' %} selected {% endif %}>
@@ -94,7 +102,7 @@
                         </span>
                         <div class="pagination">
                             {% if hasil_list.has_previous %}
-                            <a class="page-btn" href="?page={{ hasil_list.previous_page_number }}&status={{ request.GET.status }}&period={{ request.GET.period }}">
+                            <a class="page-btn" href="?page={{ hasil_list.previous_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}&period={{ request.GET.period }}">
                                 Kembali
                             </a>
                             {% endif %}
@@ -105,14 +113,14 @@
                                     {{ num }}
                                 </span>
                                 {% else %}
-                                <a class="page-btn" href="?page={{ num }}&status={{ request.GET.status }}&period={{ request.GET.period }}">
+                                <a class="page-btn" href="?page={{ num }}&search={{ request.GET.search }}&status={{ request.GET.status }}&period={{ request.GET.period }}">
                                     {{ num }}
                                 </a>
                                 {% endif %}
                             {% endfor %}
 
                             {% if hasil_list.has_next %}
-                            <a class="page-btn" href="?page={{ hasil_list.next_page_number }}&status={{ request.GET.status }}&period={{ request.GET.period }}">
+                            <a class="page-btn" href="?page={{ hasil_list.next_page_number }}&search={{ request.GET.search }}&status={{ request.GET.status }}&period={{ request.GET.period }}">
                                 Lanjut
                             </a>
                             {% endif %}
